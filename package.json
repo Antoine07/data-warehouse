@@ -1,0 +1,13 @@
+{
+  "name": "data-warehouse-formation",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build-docs.cjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@marp-team/marp-core": "4.2.0"
+  }
+}

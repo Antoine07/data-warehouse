@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8f2">
+  <title>Nettoyer et préparer les données · Data Warehouse</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/slides.css">
+  <link rel="stylesheet" href="assets/diagrams.css">
+  <noscript><style>
+    .slide-card[hidden]{display:block!important}.slide-card{margin-bottom:24px}
+    .card-controls,.deck-toolbar,.progress-line,#progress{display:none!important}
+  </style></noscript>
+</head>
+<body class="deck-page" data-deck="03_preparer_donnees">
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="brand-icon" aria-hidden="true">dw.</span> Data Warehouse</a>
+    <nav class="header-actions" aria-label="Navigation principale">
+      <a class="back-link" href="index.html#parcours">Le cours</a>
+      <a class="back-link" href="index.html#atelier">Bac à sable</a>
+    </nav>
+  </header>
+  <main class="learning-main" id="contenu">
+    <div class="page-heading">
+      <div><p class="eyebrow">Préparation des données</p><h1>Nettoyer et préparer les données</h1><p>Transformer un lot multisource en livraisons préparées et en rejets justifiés.</p></div>
+      <span class="chapter-count">24 slides</span>
+    </div>
+    <div class="deck-toolbar">
+      <div class="mode-switch" role="group" aria-label="Mode d’affichage">
+        <button id="mode-slides" aria-pressed="true">Slides</button>
+        <button id="mode-reading" aria-pressed="false">Lecture continue</button>
+      </div>
+      <div class="toolbar-actions">
+        <button class="text-button mobile-only" id="toggle-outline" aria-expanded="false" aria-controls="outline">Sommaire</button>
+        <button class="text-button" id="fullscreen">Plein écran</button>
+        <button class="text-button" id="print">Imprimer / PDF</button>
+      </div>
+    </div>
+    <div class="progress-line"><span id="position" role="status" aria-live="polite">Slide 1 sur 24</span><span id="progress-label">4 %</span></div>
+    <progress id="progress" max="24" value="1" aria-label="Progression du chapitre"></progress>
+    <div class="learning-layout">
+      <aside class="sidebar" id="outline">
+        <p class="sidebar-title">DANS CE CHAPITRE</p>
+        <nav class="slide-list" aria-label="Sommaire des slides">
+              <a class="slide-link" href="#slide-1" data-slide-link="1" aria-current="step"><small>01</small><span>Préparer les livraisons pour l’entrepôt</span></a>
+              <a class="slide-link" href="#slide-2" data-slide-link="2"><small>02</small><span>Objectif</span></a>
+              <a class="slide-link" href="#slide-3" data-slide-link="3"><small>03</small><span>Trois étapes de préparation</span></a>
+              <a class="slide-link" href="#slide-4" data-slide-link="4"><small>04</small><span>Suivre une ligne de la source au lot préparé</span></a>
+              <a class="slide-link" href="#slide-5" data-slide-link="5"><small>05</small><span>Profiler le CSV de livraison</span></a>
+              <a class="slide-link" href="#slide-6" data-slide-link="6"><small>06</small><span>Lire PostgreSQL avec pandas et SQLAlchemy</span></a>
+              <a class="slide-link" href="#slide-7" data-slide-link="7"><small>07</small><span>SQLAlchemy et Psycopg ont des rôles distincts</span></a>
+              <a class="slide-link" href="#slide-8" data-slide-link="8"><small>08</small><span>Comparer deux heures sur la même échelle</span></a>
+              <a class="slide-link" href="#slide-9" data-slide-link="9"><small>09</small><span>Normaliser les formats, puis appliquer les règles</span></a>
+              <a class="slide-link" href="#slide-10" data-slide-link="10"><small>10</small><span>Départager les versions d’une livraison</span></a>
+              <a class="slide-link" href="#slide-11" data-slide-link="11"><small>11</small><span>Contrôler la cardinalité de la jointure</span></a>
+              <a class="slide-link" href="#slide-12" data-slide-link="12"><small>12</small><span>Écrire le lot dans une transaction</span></a>
+              <a class="slide-link" href="#slide-13" data-slide-link="13"><small>13</small><span>Vérifier le résultat du traitement</span></a>
+              <a class="slide-link" href="#slide-14" data-slide-link="14"><small>14</small><span>Erreurs fréquentes</span></a>
+              <a class="slide-link" href="#slide-15" data-slide-link="15"><small>15</small><span>Exercice 1 — Prédire les résultats de la préparation</span></a>
+              <a class="slide-link" href="#slide-16" data-slide-link="16"><small>16</small><span>Exercice 2 — Corriger une jointure qui perd des livraisons</span></a>
+              <a class="slide-link" href="#slide-17" data-slide-link="17"><small>17</small><span>Exercice 3 — Auditer le lot préparé</span></a>
+              <a class="slide-link" href="#slide-18" data-slide-link="18"><small>18</small><span>Projet fil rouge — Livrer un lot vérifiable</span></a>
+              <a class="slide-link" href="#slide-19" data-slide-link="19"><small>19</small><span>Jalon 3 — Contrôler les chiffres sur le lot complet</span></a>
+              <a class="slide-link" href="#slide-20" data-slide-link="20"><small>20</small><span>Fiche de révision</span></a>
+              <a class="slide-link" href="#slide-21" data-slide-link="21"><small>21</small><span>Questions de révision</span></a>
+              <a class="slide-link" href="#slide-22" data-slide-link="22"><small>22</small><span>QCM — Questions 1 à 3</span></a>
+              <a class="slide-link" href="#slide-23" data-slide-link="23"><small>23</small><span>QCM — Questions 4 et 5</span></a>
+              <a class="slide-link" href="#slide-24" data-slide-link="24"><small>24</small><span>À retenir</span></a>
+        </nav>
+        <a class="source-link" href="supports/03_preparer_donnees.md" download>Support Markdown ↓</a>
+      </aside>
+      <div class="content-column">
+        <div id="slides">
+          <article class="slide-card" id="slide-1" aria-labelledby="slide-label-1">
+            <p class="question-kicker" id="slide-label-1">Préparation des données <span class="pill">1 / 24</span></p>
+            <div class="prose">
+<h1 id="pr%C3%A9parer-les-livraisons-pour-lentrep%C3%B4t">Préparer les livraisons pour l’entrepôt</h1>
+<p>Le modèle attend une ligne par livraison. L’export terrain contient plusieurs versions, des heures écrites dans différents fuseaux et des valeurs à vérifier. Le lot préparé doit pouvoir être contrôlé ligne par ligne.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-2" aria-labelledby="slide-label-2" hidden>
+            <p class="question-kicker" id="slide-label-2">Préparation des données <span class="pill">2 / 24</span></p>
+            <div class="prose">
+<h2 id="objectif">Objectif</h2>
+<p>Combiner un CSV et des tables PostgreSQL, normaliser les valeurs et justifier chaque rejet. Produire un lot unique par livraison et vérifier qu’un second chargement donne le même résultat.</p>
+<p><strong>Prérequis</strong> — Grain de livraison, jointures, bases de Python et de SQL. Démarrer le <a href="index.html#atelier">bac à sable</a> pour exécuter les exemples.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-3" aria-labelledby="slide-label-3" hidden>
+            <p class="question-kicker" id="slide-label-3">Préparation des données <span class="pill">3 / 24</span></p>
+            <div class="prose">
+<h2 id="trois-%C3%A9tapes-de-pr%C3%A9paration">Trois étapes de préparation</h2>
+<div class="table-wrap" tabindex="0"><table>
+<thead>
+<tr>
+<th>Étape</th>
+<th>Entrée</th>
+<th>Résultat vérifiable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Profiler</td>
+<td>CSV brut, traces et référentiels</td>
+<td>Colonnes, types attendus, valeurs absentes, versions concurrentes</td>
+</tr>
+<tr>
+<td>Normaliser et contrôler</td>
+<td>Horaires, codes, coûts et distances</td>
+<td>Une livraison valide par identifiant et un motif par ligne rejetée</td>
+</tr>
+<tr>
+<td>Écrire en <code>staging</code></td>
+<td>Lignes préparées et rejets</td>
+<td>Deux tables du même lot, chargées ensemble dans une transaction</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>staging</code> est la <strong>zone de préparation</strong> PostgreSQL. Les fichiers bruts et les tables du schéma <code>sources</code> permettent de retrouver la donnée d’origine.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-4" aria-labelledby="slide-label-4" hidden>
+            <p class="question-kicker" id="slide-label-4">Préparation des données <span class="pill">4 / 24</span></p>
+            <div class="prose">
+<h2 id="suivre-une-ligne-de-la-source-au-lot-pr%C3%A9par%C3%A9">Suivre une ligne de la source au lot préparé</h2>
+<figure class="course-diagram diagram-pipeline" aria-labelledby="flux-legende">
+  <div class="diagram-branches">
+    <div class="diagram-node"><strong>CSV du dispatch</strong><span>Versions, statuts, heures et coûts</span></div>
+    <div class="diagram-node"><strong>PostgreSQL</strong><span>Distances GPS et référentiels</span></div>
+  </div>
+  <div class="diagram-junction" aria-hidden="true"></div>
+  <div class="diagram-node diagram-focus diagram-center"><strong>Rapprocher et contrôler</strong><span>Identifiant, dernière version, formats et règles de qualité</span></div>
+  <div class="diagram-junction diagram-split" aria-hidden="true"></div>
+  <div class="diagram-branches">
+    <div class="diagram-node"><strong>Livraisons préparées</strong><span>Une ligne par livraison retenue</span></div>
+    <div class="diagram-node diagram-review"><strong>Rejets expliqués</strong><span>Numéro de ligne du CSV et motif</span></div>
+  </div>
+  <figcaption id="flux-legende">Les deux résultats sont écrits ensemble dans PostgreSQL, dans le schéma <code>staging</code>.</figcaption>
+</figure>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-5" aria-labelledby="slide-label-5" hidden>
+            <p class="question-kicker" id="slide-label-5">Préparation des données <span class="pill">5 / 24</span></p>
+            <div class="prose">
+<h2 id="profiler-le-csv-de-livraison">Profiler le CSV de livraison</h2>
+<pre tabindex="0"><code class="language-python"><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+
+brutes = pd.read_csv(<span class="hljs-string">&quot;data/livraisons.csv&quot;</span>, dtype=<span class="hljs-string">&quot;string&quot;</span>, keep_default_na=<span class="hljs-literal">False</span>)
+cles = brutes[<span class="hljs-string">&quot;livraison_id&quot;</span>].<span class="hljs-built_in">str</span>.strip().<span class="hljs-built_in">str</span>.upper()
+
+<span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(brutes))
+<span class="hljs-built_in">print</span>(cles.value_counts().loc[<span class="hljs-keyword">lambda</span> comptages: comptages &gt; <span class="hljs-number">1</span>])
+</code></pre>
+<p><code>dtype=&quot;string&quot;</code> garde les codes et les textes dans leur forme brute. La conversion des dates et des coûts suit des règles choisies. <code>str.strip()</code> enlève les espaces en bordure, puis <code>str.upper()</code> unifie la casse des identifiants du cas.</p>
+<p><strong>Résultat attendu</strong> — 15 lignes, avec deux occurrences pour <code>L002</code> et deux pour <code>L011</code> après normalisation des clés.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-6" aria-labelledby="slide-label-6" hidden>
+            <p class="question-kicker" id="slide-label-6">Préparation des données <span class="pill">6 / 24</span></p>
+            <div class="prose">
+<h2 id="lire-postgresql-avec-pandas-et-sqlalchemy">Lire PostgreSQL avec pandas et SQLAlchemy</h2>
+<pre tabindex="0"><code class="language-python"><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+<span class="hljs-keyword">from</span> sqlalchemy <span class="hljs-keyword">import</span> create_engine
+
+engine = create_engine(
+    <span class="hljs-string">&quot;postgresql+psycopg://student:student@postgres:5432/formation&quot;</span>
+)
+
+trajets = pd.read_sql(
+    <span class="hljs-string">&quot;SELECT livraison_id, distance_m FROM sources.trajets ORDER BY livraison_id&quot;</span>,
+    engine,
+)
+<span class="hljs-built_in">print</span>(trajets.head())
+</code></pre>
+<p><strong>Fonctionnement</strong> — <code>create_engine</code> prépare l’accès à la base <code>formation</code>. L’URL <code>postgresql+psycopg</code> choisit PostgreSQL comme dialecte et Psycopg comme pilote. <code>pd.read_sql</code> exécute la requête et retourne un <code>DataFrame</code> de deux colonnes.</p>
+<p><strong>Résultat attendu</strong> — La première ligne associe <code>L001</code> à <code>3200</code> mètres. La requête complète lit 11 mesures. Depuis JupyterLab, <code>postgres</code> est le nom du service Compose. Depuis l’ordinateur qui héberge Docker, utiliser <code>127.0.0.1</code> et le port publié. En fin de script, libérer le moteur avec <code>engine.dispose()</code>.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-7" aria-labelledby="slide-label-7" hidden>
+            <p class="question-kicker" id="slide-label-7">Préparation des données <span class="pill">7 / 24</span></p>
+            <div class="prose">
+<h2 id="sqlalchemy-et-psycopg-ont-des-r%C3%B4les-distincts">SQLAlchemy et Psycopg ont des rôles distincts</h2>
+<div class="table-wrap" tabindex="0"><table>
+<thead>
+<tr>
+<th>Outil</th>
+<th>Rôle dans l’atelier</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Psycopg</strong></td>
+<td>Pilote Python qui communique avec PostgreSQL</td>
+<td>Ouvrir une connexion, exécuter du SQL, lire les lignes et gérer une transaction</td>
+</tr>
+<tr>
+<td><strong>SQLAlchemy Core</strong></td>
+<td>Couche qui s’appuie sur le pilote et gère les connexions</td>
+<td>Partager un moteur avec pandas, ouvrir une connexion ou une transaction</td>
+</tr>
+<tr>
+<td><strong>pandas</strong></td>
+<td>Bibliothèque de traitement tabulaire</td>
+<td>Lire avec <code>read_sql</code>, préparer les données, écrire avec <code>to_sql</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Pour le TP, choisissez <strong>SQLAlchemy ou Psycopg direct</strong>. Avec Psycopg direct, utilisez un curseur, construisez le <code>DataFrame</code> à partir des lignes et faites les écritures par <code>executemany</code> avec des paramètres SQL. Les contrôles du lot sont identiques.</p>
+<details><summary>Lire la même table avec Psycopg direct</summary>
+<pre tabindex="0"><code class="language-python"><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+<span class="hljs-keyword">import</span> psycopg
+
+<span class="hljs-keyword">with</span> psycopg.connect(<span class="hljs-string">&quot;postgresql://student:student@postgres:5432/formation&quot;</span>) <span class="hljs-keyword">as</span> connexion:
+    <span class="hljs-keyword">with</span> connexion.cursor() <span class="hljs-keyword">as</span> curseur:
+        curseur.execute(
+            <span class="hljs-string">&quot;SELECT livraison_id, distance_m FROM sources.trajets ORDER BY livraison_id&quot;</span>
+        )
+        colonnes = [colonne.name <span class="hljs-keyword">for</span> colonne <span class="hljs-keyword">in</span> curseur.description]
+        trajets = pd.DataFrame(curseur.fetchall(), columns=colonnes)
+</code></pre>
+<p>Le pilote renvoie les lignes et la description des colonnes. Le bloc <code>with</code> ferme la connexion en sortie. Le résultat contient les mêmes 11 lignes.</p>
+</details>
+<p><a href="https://pandas.pydata.org/docs/reference/api/pandas.read_sql.html">Documentation pandas</a> · <a href="https://docs.sqlalchemy.org/en/20/dialects/postgresql.html#module-sqlalchemy.dialects.postgresql.psycopg">Dialecte Psycopg de SQLAlchemy</a></p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-8" aria-labelledby="slide-label-8" hidden>
+            <p class="question-kicker" id="slide-label-8">Préparation des données <span class="pill">8 / 24</span></p>
+            <div class="prose">
+<h2 id="comparer-deux-heures-sur-la-m%C3%AAme-%C3%A9chelle">Comparer deux heures sur la même échelle</h2>
+<p>Pour <code>L002</code>, la promesse est à <code>09:30+01:00</code> et la livraison réelle à <code>08:40Z</code>. <code>Z</code> indique UTC.</p>
+<pre tabindex="0"><code class="language-python">heures = pd.Series([<span class="hljs-string">&quot;2026-12-01T09:30:00+01:00&quot;</span>, <span class="hljs-string">&quot;2026-12-01T08:40:00Z&quot;</span>])
+utc = pd.to_datetime(heures, <span class="hljs-built_in">format</span>=<span class="hljs-string">&quot;ISO8601&quot;</span>, utc=<span class="hljs-literal">True</span>)
+ecart = (utc.iloc[<span class="hljs-number">1</span>] - utc.iloc[<span class="hljs-number">0</span>]).total_seconds() / <span class="hljs-number">60</span>
+<span class="hljs-built_in">print</span>(ecart)
+</code></pre>
+<p>La promesse vaut <code>08:30 UTC</code>. Le résultat est <strong>10 minutes</strong> de retard. Pour le regroupement par jour, convertir ensuite vers <code>Europe/Zurich</code> avant d’extraire la date. <code>L005</code> appartient ainsi au 1er décembre local.</p>
+<p>Les horaires de ce lot doivent indiquer un décalage explicite. Sans ce décalage, la ligne reçoit un motif de rejet.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-9" aria-labelledby="slide-label-9" hidden>
+            <p class="question-kicker" id="slide-label-9">Préparation des données <span class="pill">9 / 24</span></p>
+            <div class="prose">
+<h2 id="normaliser-les-formats-puis-appliquer-les-r%C3%A8gles">Normaliser les formats, puis appliquer les règles</h2>
+<div class="table-wrap" tabindex="0"><table>
+<thead>
+<tr>
+<th>Exemple brut</th>
+<th>Préparation</th>
+<th>Règle retenue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&quot;12,40&quot;</code></td>
+<td><code>12.40</code> en décimal</td>
+<td>Montant positif ou nul en CHF, avec au plus deux décimales</td>
+</tr>
+<tr>
+<td><code>&quot; l002 &quot;</code></td>
+<td><code>L002</code></td>
+<td>Codes comparés sans espaces de bord et en majuscules</td>
+</tr>
+<tr>
+<td><code>3200</code> dans <code>distance_m</code></td>
+<td><code>3200 m</code>, soit <code>3,2 km</code></td>
+<td>Distance en mètres dans la base</td>
+</tr>
+<tr>
+<td>Trace absente pour <code>L006</code></td>
+<td>Distance inconnue</td>
+<td>La livraison est exploitable avec un indicateur de couverture</td>
+</tr>
+<tr>
+<td><code>-250</code> pour <code>L010</code></td>
+<td>Rejet <code>distance_negative</code></td>
+<td>Une distance observée doit être positive ou nulle</td>
+</tr>
+</tbody>
+</table></div>
+<p>Les points de zone utilisent latitude puis longitude. Vérifier aussi les bornes de chaque coordonnée, la zone de référence et les unités avant toute analyse géographique.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-10" aria-labelledby="slide-label-10" hidden>
+            <p class="question-kicker" id="slide-label-10">Préparation des données <span class="pill">10 / 24</span></p>
+            <div class="prose">
+<h2 id="d%C3%A9partager-les-versions-dune-livraison">Départager les versions d’une livraison</h2>
+<ol>
+<li>Vérifier l’identifiant et l’horodatage d’export.</li>
+<li>Chercher le dernier export par identifiant. Tracer les versions antérieures avec <code>version_ancienne</code>.</li>
+<li>En cas d’égalité à la date d’export la plus récente, isoler les lignes en <code>version_ambigue</code>.</li>
+<li>Appliquer les autres règles au dernier enregistrement retenu.</li>
+</ol>
+<p>Pour <code>L002</code>, l’export de 11 h est la version à retenir. Pour <code>L011</code>, deux coûts sont associés au même export. Les deux lignes partent en rejet pour vérification auprès de la source.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-11" aria-labelledby="slide-label-11" hidden>
+            <p class="question-kicker" id="slide-label-11">Préparation des données <span class="pill">11 / 24</span></p>
+            <div class="prose">
+<h2 id="contr%C3%B4ler-la-cardinalit%C3%A9-de-la-jointure">Contrôler la cardinalité de la jointure</h2>
+<pre tabindex="0"><code class="language-python">livraisons = brutes.assign(livraison_id=cles)
+enrichies = livraisons.merge(
+    trajets, how=<span class="hljs-string">&quot;left&quot;</span>, on=<span class="hljs-string">&quot;livraison_id&quot;</span>, validate=<span class="hljs-string">&quot;many_to_one&quot;</span>
+)
+<span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(enrichies))
+</code></pre>
+<p>La jointure gauche conserve les lignes du dispatch, y compris celles qui n’ont pas de trace. <code>validate=&quot;many_to_one&quot;</code> exige un identifiant unique du côté des trajets. Le lot enrichi contient encore <strong>15 lignes</strong> à cette étape.</p>
+<p>Après la sélection des versions et la validation métier, il doit rester une seule ligne par <code>livraison_id</code> dans le lot préparé. Vérifier aussi les codes <code>chauffeur_id</code>, <code>vehicule_id</code> et <code>zone_id</code> dans les référentiels.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-12" aria-labelledby="slide-label-12" hidden>
+            <p class="question-kicker" id="slide-label-12">Préparation des données <span class="pill">12 / 24</span></p>
+            <div class="prose">
+<h2 id="%C3%A9crire-le-lot-dans-une-transaction">Écrire le lot dans une transaction</h2>
+<pre tabindex="0"><code class="language-python"><span class="hljs-keyword">from</span> sqlalchemy <span class="hljs-keyword">import</span> Date, Numeric
+
+types_sql = {
+    <span class="hljs-string">&quot;cout_chf&quot;</span>: Numeric(<span class="hljs-number">9</span>, <span class="hljs-number">2</span>), <span class="hljs-string">&quot;retard_minutes&quot;</span>: Numeric(<span class="hljs-number">12</span>, <span class="hljs-number">2</span>),
+    <span class="hljs-string">&quot;jour_promis_local&quot;</span>: Date(), <span class="hljs-string">&quot;jour_livre_local&quot;</span>: Date(),
+}
+
+<span class="hljs-keyword">with</span> engine.begin() <span class="hljs-keyword">as</span> connexion:
+    connexion.exec_driver_sql(
+        <span class="hljs-string">&quot;TRUNCATE staging.livraisons_preparees, staging.rejets_livraisons&quot;</span>
+    )
+    preparees.to_sql(<span class="hljs-string">&quot;livraisons_preparees&quot;</span>, connexion,
+                     schema=<span class="hljs-string">&quot;staging&quot;</span>, if_exists=<span class="hljs-string">&quot;append&quot;</span>, index=<span class="hljs-literal">False</span>, dtype=types_sql)
+    rejets.to_sql(<span class="hljs-string">&quot;rejets_livraisons&quot;</span>, connexion,
+                  schema=<span class="hljs-string">&quot;staging&quot;</span>, if_exists=<span class="hljs-string">&quot;append&quot;</span>, index=<span class="hljs-literal">False</span>)
+</code></pre>
+<p>Le TP traite le fichier comme un lot complet. La transaction remplace ensemble les lignes préparées et les rejets du lot précédent. Si une insertion échoue, PostgreSQL annule aussi le remplacement. <code>dtype</code> associe explicitement les décimaux et les jours à leurs types PostgreSQL. <code>index=False</code> écrit les colonnes du lot sans ajouter l’index pandas.</p>
+<p><code>preparer_livraisons.py</code> fournit une réalisation de ces étapes. L’option <code>--charger</code> exécute l’écriture. Les tables recevant le lot sont créées par l’initialisation de PostgreSQL.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-13" aria-labelledby="slide-label-13" hidden>
+            <p class="question-kicker" id="slide-label-13">Préparation des données <span class="pill">13 / 24</span></p>
+            <div class="prose">
+<h2 id="v%C3%A9rifier-le-r%C3%A9sultat-du-traitement">Vérifier le résultat du traitement</h2>
+<pre tabindex="0"><code class="language-sh">docker compose -f sandbox/compose.yaml <span class="hljs-built_in">exec</span> atelier python preparer_livraisons.py --charger
+</code></pre>
+<pre tabindex="0"><code class="language-sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">FILTER</span> (<span class="hljs-keyword">WHERE</span> statut <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;LIVREE&#x27;</span>) <span class="hljs-keyword">AS</span> effectuees,
+       <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">FILTER</span> (<span class="hljs-keyword">WHERE</span> ponctuelle) <span class="hljs-keyword">AS</span> ponctuelles,
+       <span class="hljs-built_in">count</span>(distance_m) <span class="hljs-keyword">FILTER</span> (<span class="hljs-keyword">WHERE</span> statut <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;LIVREE&#x27;</span>) <span class="hljs-keyword">AS</span> distances_connues,
+       <span class="hljs-built_in">sum</span>(cout_chf) <span class="hljs-keyword">FILTER</span> (<span class="hljs-keyword">WHERE</span> statut <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;LIVREE&#x27;</span>) <span class="hljs-keyword">AS</span> cout_total_chf
+<span class="hljs-keyword">FROM</span> staging.livraisons_preparees;
+</code></pre>
+<p><strong>Résultat attendu</strong> — 15 lignes source, 7 préparées, 8 rejets. Sur 6 livraisons effectuées, 3 sont à l’heure, 5 ont une distance et leur coût total est de 80,00 CHF. Le coût moyen des six livraisons vaut 13,33 CHF. Relancer le traitement doit reproduire ces comptes.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-14" aria-labelledby="slide-label-14" hidden>
+            <p class="question-kicker" id="slide-label-14">Préparation des données <span class="pill">14 / 24</span></p>
+            <div class="prose">
+<h2 id="erreurs-fr%C3%A9quentes">Erreurs fréquentes</h2>
+<ul>
+<li>Comparer directement les chaînes <code>09:30+01:00</code> et <code>08:40Z</code>.</li>
+<li>Choisir arbitrairement la première occurrence d’un identifiant dans le CSV.</li>
+<li>Utiliser une jointure interne pour enrichir avec une distance facultative.</li>
+<li>Mélanger une colonne d’index pandas avec les champs attendus par la table.</li>
+<li>Charger les livraisons et les rejets dans deux transactions indépendantes.</li>
+</ul>
+            </div>
+          </article>
+          <article class="slide-card exercise" id="slide-15" aria-labelledby="slide-label-15" hidden>
+            <p class="question-kicker" id="slide-label-15">Préparation des données <span class="pill">15 / 24</span></p>
+            <div class="prose">
+<h2 id="exercice-1--pr%C3%A9dire-les-r%C3%A9sultats-de-la-pr%C3%A9paration">Exercice 1 — Prédire les résultats de la préparation</h2>
+<p><strong>Objectif</strong> — Appliquer la normalisation, le choix de version et le fuseau. <strong>Prérequis</strong> — Lecture du CSV de départ.</p>
+<p>Sur <code>L002</code>, indiquer la clé normalisée, la version retenue et le retard. Sur <code>L005</code>, donner le jour local de livraison. Utiliser les valeurs du CSV et justifier chaque réponse par une règle.</p>
+<p><strong>Livrable et réussite</strong> — Deux fiches courtes avec le résultat prévu et les champs qui le justifient.</p>
+<details><summary>Indices gradués</summary>
+<ol>
+<li>Pour <code>L002</code>, comparer les horodatages <code>exporte_a</code> après normalisation de l’identifiant.</li>
+<li>Pour <code>L005</code>, convertir <code>23:20Z</code> en heure de Genève avant de lire la date.</li>
+</ol>
+</details>
+<details><summary>Correction expliquée</summary>
+<p>La clé vaut <code>L002</code>. L’export de 11 h indique une livraison à <code>08:40Z</code> pour une promesse à <code>08:30Z</code>, soit 10 minutes de retard. <code>L005</code> est livrée le 1er décembre à <code>00:20</code> à Genève. La livraison correspond à cinq minutes d’avance sur <code>00:25</code>.</p>
+</details>
+            </div>
+          </article>
+          <article class="slide-card exercise" id="slide-16" aria-labelledby="slide-label-16" hidden>
+            <p class="question-kicker" id="slide-label-16">Préparation des données <span class="pill">16 / 24</span></p>
+            <div class="prose">
+<h2 id="exercice-2--corriger-une-jointure-qui-perd-des-livraisons">Exercice 2 — Corriger une jointure qui perd des livraisons</h2>
+<p><strong>Objectif</strong> — Déboguer l’enrichissement avec les traces. <strong>Prérequis</strong> — <code>merge</code>, cardinalité et trace facultative.</p>
+<p>Un collègue exécute <code>livraisons.merge(trajets, on=&quot;livraison_id&quot;)</code>. Il obtient moins de lignes que dans le CSV. Corriger l’instruction, puis vérifier le nombre de lignes et la distance de <code>L006</code>.</p>
+<p><strong>Livrable et réussite</strong> — Une jointure corrigée qui garde les 15 lignes et détecte un identifiant dupliqué côté trajets.</p>
+<details><summary>Indices gradués</summary>
+<ol>
+<li>La jointure pandas est interne par défaut.</li>
+<li>Vérifier la contrainte d’unicité attendue du côté des trajets.</li>
+</ol>
+</details>
+<details><summary>Correction expliquée</summary>
+<pre tabindex="0"><code class="language-python">enrichies = livraisons.merge(
+    trajets, how=<span class="hljs-string">&quot;left&quot;</span>, on=<span class="hljs-string">&quot;livraison_id&quot;</span>, validate=<span class="hljs-string">&quot;many_to_one&quot;</span>
+)
+<span class="hljs-keyword">assert</span> <span class="hljs-built_in">len</span>(enrichies) == <span class="hljs-number">15</span>
+<span class="hljs-keyword">assert</span> enrichies.loc[enrichies[<span class="hljs-string">&quot;livraison_id&quot;</span>].eq(<span class="hljs-string">&quot;L006&quot;</span>), <span class="hljs-string">&quot;distance_m&quot;</span>].isna().<span class="hljs-built_in">all</span>()
+</code></pre>
+<p>La jointure conserve les 15 entrées du dispatch. La distance de <code>L006</code> est manquante. En ajoutant volontairement un doublon côté trajets dans une copie du <code>DataFrame</code>, <code>validate</code> déclenche une erreur avant toute multiplication de lignes.</p>
+</details>
+            </div>
+          </article>
+          <article class="slide-card exercise" id="slide-17" aria-labelledby="slide-label-17" hidden>
+            <p class="question-kicker" id="slide-label-17">Préparation des données <span class="pill">17 / 24</span></p>
+            <div class="prose">
+<h2 id="exercice-3--auditer-le-lot-pr%C3%A9par%C3%A9">Exercice 3 — Auditer le lot préparé</h2>
+<p><strong>Objectif</strong> — Justifier les rejets et contrôler la relance. <strong>Prérequis</strong> — Mode <code>--charger</code> et requêtes avec <code>GROUP BY</code>.</p>
+<p>Charger le lot, puis compter les rejets par motif et repérer les lignes qui concernent <code>L011</code>. Relancer le chargement et contrôler l’unicité du lot préparé. Choisir un rejet à expliquer au responsable d’exploitation.</p>
+<p><strong>Livrable et réussite</strong> — Une requête de contrôle, le bilan de <code>L011</code>, et la preuve que les 15 lignes sont réparties entre le lot préparé et le registre des rejets lors des deux exécutions.</p>
+<details><summary>Indices gradués</summary>
+<ol>
+<li>Le numéro de ligne du CSV se trouve dans <code>ligne_source</code>.</li>
+<li>Comparer <code>count(*)</code> à <code>count(DISTINCT livraison_id)</code> dans le lot préparé.</li>
+</ol>
+</details>
+<details><summary>Correction expliquée</summary>
+<pre tabindex="0"><code class="language-sql"><span class="hljs-keyword">SELECT</span> motif, <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">AS</span> lignes
+<span class="hljs-keyword">FROM</span> staging.rejets_livraisons <span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> motif <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> motif;
+
+<span class="hljs-keyword">SELECT</span> ligne_source, motif <span class="hljs-keyword">FROM</span> staging.rejets_livraisons
+<span class="hljs-keyword">WHERE</span> livraison_id <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;L011&#x27;</span> <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> ligne_source;
+
+<span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">AS</span> lignes, <span class="hljs-built_in">count</span>(<span class="hljs-keyword">DISTINCT</span> livraison_id) <span class="hljs-keyword">AS</span> livraisons
+<span class="hljs-keyword">FROM</span> staging.livraisons_preparees;
+</code></pre>
+<p>Les lignes 13 et 14 de <code>L011</code> partagent le même horodatage d’export, avec deux coûts. Elles sont en <code>version_ambigue</code>. On retrouve <strong>7 lignes pour 7 livraisons</strong> et <strong>8 rejets</strong> à chaque passage. <code>L011</code> reste à vérifier auprès du dispatch avant intégration à un lot ultérieur.</p>
+</details>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-18" aria-labelledby="slide-label-18" hidden>
+            <p class="question-kicker" id="slide-label-18">Préparation des données <span class="pill">18 / 24</span></p>
+            <div class="prose">
+<h2 id="projet-fil-rouge--livrer-un-lot-v%C3%A9rifiable">Projet fil rouge — Livrer un lot vérifiable</h2>
+<p><strong>Livrables</strong> — Une table de livraisons préparées, un registre de rejets avec numéro de ligne et motif, et une requête qui rapproche les volumes et les coûts avec le lot de départ.</p>
+<p><strong>Validation</strong> — L’identité de chaque livraison est stable. Les horaires se comparent en UTC et les jours métier se lisent à Genève. Les absences de distance restent visibles. Les deux tables <code>staging</code> correspondent au même lot à chaque relance.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-19" aria-labelledby="slide-label-19" hidden>
+            <p class="question-kicker" id="slide-label-19">Préparation des données <span class="pill">19 / 24</span></p>
+            <div class="prose">
+<h2 id="jalon-3--contr%C3%B4ler-les-chiffres-sur-le-lot-complet">Jalon 3 — Contrôler les chiffres sur le lot complet</h2>
+<p>Reproduire le tableau du premier chapitre, cette fois sur les <strong>15 lignes source</strong>. Réconcilier d’abord le nombre de lignes entre versions écartées, anomalies et livraisons préparées. Regrouper ensuite les livraisons effectuées par tournée pour calculer la ponctualité, le coût et la couverture GPS.</p>
+<pre tabindex="0"><code class="language-sql"><span class="hljs-keyword">SELECT</span> tournee_id, <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">AS</span> effectuees,
+       <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">FILTER</span> (<span class="hljs-keyword">WHERE</span> ponctuelle) <span class="hljs-keyword">AS</span> ponctuelles,
+       <span class="hljs-built_in">count</span>(distance_m) <span class="hljs-keyword">AS</span> distances_connues,
+       <span class="hljs-built_in">sum</span>(distance_m) <span class="hljs-keyword">AS</span> metres_observes,
+       <span class="hljs-built_in">sum</span>(cout_chf) <span class="hljs-keyword">AS</span> cout_total_chf,
+       <span class="hljs-built_in">sum</span>(retard_minutes) <span class="hljs-keyword">AS</span> retard_total_minutes
+<span class="hljs-keyword">FROM</span> staging.livraisons_preparees
+<span class="hljs-keyword">WHERE</span> statut <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;LIVREE&#x27;</span>
+<span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> tournee_id <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> tournee_id;
+</code></pre>
+<p>Pour valider l’agrégation, reconstituer le total des coûts et la ponctualité globale à partir des effectifs et des sommes. Calculer le retard moyen des livraisons effectuées, puis celui des seules livraisons en retard.</p>
+<details><summary>Valeurs de contrôle</summary>
+<p><strong>15</strong> lignes brutes, <strong>3</strong> versions écartées ou ambiguës, <strong>5</strong> autres rejets et <strong>7</strong> livraisons préparées, dont une annulée.</p>
+<div class="table-wrap" tabindex="0"><table>
+<thead>
+<tr>
+<th>Tournée</th>
+<th>Effectuées</th>
+<th>À l’heure</th>
+<th>Distances connues</th>
+<th>Distance observée</th>
+<th>Coût total</th>
+<th>Retard cumulé</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T-A</td>
+<td>3</td>
+<td>2</td>
+<td>3</td>
+<td>10,1 km</td>
+<td>38,50 CHF</td>
+<td>10 min</td>
+</tr>
+<tr>
+<td>T-B</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>8,9 km</td>
+<td>23,50 CHF</td>
+<td>15 min</td>
+</tr>
+<tr>
+<td>T-C</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>23,8 km</td>
+<td>18,00 CHF</td>
+<td>50 min</td>
+</tr>
+<tr>
+<td>Total</td>
+<td>6</td>
+<td>3</td>
+<td>5</td>
+<td>42,8 km</td>
+<td>80,00 CHF</td>
+<td>75 min</td>
+</tr>
+</tbody>
+</table></div>
+<p>La ponctualité vaut <strong>50 %</strong>, la couverture GPS <strong>83,3 %</strong> et le coût moyen <strong>13,33 CHF</strong>. Le retard moyen vaut <strong>12,5 minutes</strong> pour l’ensemble des six livraisons effectuées et <strong>25 minutes</strong> pour les trois livraisons en retard.</p>
+</details>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-20" aria-labelledby="slide-label-20" hidden>
+            <p class="question-kicker" id="slide-label-20">Préparation des données <span class="pill">20 / 24</span></p>
+            <div class="prose">
+<h2 id="fiche-de-r%C3%A9vision">Fiche de révision</h2>
+<ul>
+<li><strong>Profilage</strong> — Observer les types, unités, valeurs absentes et doublons avant de transformer.</li>
+<li><strong>Règle de qualité</strong> — Décider quoi conserver, corriger ou envoyer en rejet, puis tracer cette décision.</li>
+<li><strong>Transaction</strong> — Rassembler les écritures qui doivent aboutir ensemble.</li>
+<li><strong>Cas d’usage</strong> — Un transporteur rapproche ses exports de dispatch et ses GPS pour rendre la comparaison des tournées reproductible.</li>
+</ul>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-21" aria-labelledby="slide-label-21" hidden>
+            <p class="question-kicker" id="slide-label-21">Préparation des données <span class="pill">21 / 24</span></p>
+            <div class="prose">
+<h2 id="questions-de-r%C3%A9vision">Questions de révision</h2>
+<ol>
+<li>À quoi sert la zone <code>staging</code> ?</li>
+<li>Quel lien unit SQLAlchemy et Psycopg ?</li>
+<li>Pourquoi convertir les horaires en UTC avant de les soustraire ?</li>
+<li>Que vérifie <code>validate=&quot;many_to_one&quot;</code> ?</li>
+<li>Comment démontrer que la relance ne duplique pas le lot ?</li>
+</ol>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-22" aria-labelledby="slide-label-22" hidden>
+            <p class="question-kicker" id="slide-label-22">Préparation des données <span class="pill">22 / 24</span></p>
+            <div class="prose">
+<h2 id="qcm--questions-1-%C3%A0-3">QCM — Questions 1 à 3</h2>
+<ol>
+<li>Quel outil est le pilote PostgreSQL ? A. pandas · B. SQLAlchemy · C. Psycopg</li>
+<li>Quelle jointure conserve le dispatch si une trace est absente ? A. Interne · B. Gauche · C. Croisée</li>
+<li>Quelle date locale correspond à <code>2026-11-30T23:20:00Z</code> à Genève ? A. 30 novembre · B. 1er décembre · C. 2 décembre</li>
+</ol>
+<details><summary>Correction expliquée</summary>
+<ol>
+<li><strong>C</strong>. L’URL SQLAlchemy désigne explicitement le pilote Psycopg.</li>
+<li><strong>B</strong>. Les lignes de gauche sont conservées, y compris quand la mesure manque.</li>
+<li><strong>B</strong>. À cette date, l’heure locale est <code>00:20</code> le lendemain de la date UTC affichée.</li>
+</ol>
+</details>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-23" aria-labelledby="slide-label-23" hidden>
+            <p class="question-kicker" id="slide-label-23">Préparation des données <span class="pill">23 / 24</span></p>
+            <div class="prose">
+<h2 id="qcm--questions-4-et-5">QCM — Questions 4 et 5</h2>
+<ol start="4">
+<li>Deux versions différentes partagent l’heure d’export la plus récente. Quelle règle suit le TP ? A. Isoler les deux · B. Prendre le coût le plus faible · C. Additionner les coûts</li>
+<li>Une insertion échoue dans la transaction de remplacement. Qu’arrive-t-il au lot précédent ? A. Ses lignes doublent · B. Il est conservé · C. Seuls ses rejets disparaissent</li>
+</ol>
+<details><summary>Correction expliquée</summary>
+<ol start="4">
+<li><strong>A</strong>. Il faut faire vérifier la version et la valeur de référence.</li>
+<li><strong>B</strong>. La transaction annule à la fois le remplacement et les insertions du lot en échec.</li>
+</ol>
+</details>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-24" aria-labelledby="slide-label-24" hidden>
+            <p class="question-kicker" id="slide-label-24">Préparation des données <span class="pill">24 / 24</span></p>
+            <div class="prose">
+<h2 id="%C3%A0-retenir">À retenir</h2>
+<p>Le modèle fixe ce qu’une livraison valide doit contenir. Le traitement prépare les valeurs et documente les écarts. Les contrôles de volume, d’unicité, de fuseau horaire et de couverture rendent le lot vérifiable avant le chargement de l’entrepôt.</p>
+            </div>
+            <div class="chapter-end"><a class="button primary" href="index.html">Revenir au parcours →</a></div>
+          </article>
+        </div>
+        <nav class="card-controls" aria-label="Navigation des slides">
+          <button class="button" id="previous" disabled>← Précédente</button>
+          <span class="page-number" id="page-number" aria-hidden="true">01 / 24</span>
+          <button class="button primary" id="next">Suivante →</button>
+        </nav>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer"><span>Data Warehouse · Satom IT &amp; Learning Solutions</span></footer>
+  <script src="assets/slides.js" defer></script>
+</body>
+</html>

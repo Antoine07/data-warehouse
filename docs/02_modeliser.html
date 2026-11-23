@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8f2">
+  <title>Le schéma en étoile · Data Warehouse</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/slides.css">
+  <link rel="stylesheet" href="assets/diagrams.css">
+  <noscript><style>
+    .slide-card[hidden]{display:block!important}.slide-card{margin-bottom:24px}
+    .card-controls,.deck-toolbar,.progress-line,#progress{display:none!important}
+  </style></noscript>
+</head>
+<body class="deck-page" data-deck="02_modeliser">
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="brand-icon" aria-hidden="true">dw.</span> Data Warehouse</a>
+    <nav class="header-actions" aria-label="Navigation principale">
+      <a class="back-link" href="index.html#parcours">Le cours</a>
+      <a class="back-link" href="index.html#atelier">Bac à sable</a>
+    </nav>
+  </header>
+  <main class="learning-main" id="contenu">
+    <div class="page-heading">
+      <div><p class="eyebrow">Modélisation dimensionnelle</p><h1>Le schéma en étoile</h1><p>Organiser les faits et les dimensions autour d’une ligne par livraison.</p></div>
+      <span class="chapter-count">19 slides</span>
+    </div>
+    <div class="deck-toolbar">
+      <div class="mode-switch" role="group" aria-label="Mode d’affichage">
+        <button id="mode-slides" aria-pressed="true">Slides</button>
+        <button id="mode-reading" aria-pressed="false">Lecture continue</button>
+      </div>
+      <div class="toolbar-actions">
+        <button class="text-button mobile-only" id="toggle-outline" aria-expanded="false" aria-controls="outline">Sommaire</button>
+        <button class="text-button" id="fullscreen">Plein écran</button>
+        <button class="text-button" id="print">Imprimer / PDF</button>
+      </div>
+    </div>
+    <div class="progress-line"><span id="position" role="status" aria-live="polite">Slide 1 sur 19</span><span id="progress-label">5 %</span></div>
+    <progress id="progress" max="19" value="1" aria-label="Progression du chapitre"></progress>
+    <div class="learning-layout">
+      <aside class="sidebar" id="outline">
+        <p class="sidebar-title">DANS CE CHAPITRE</p>
+        <nav class="slide-list" aria-label="Sommaire des slides">
+              <a class="slide-link" href="#slide-1" data-slide-link="1" aria-current="step"><small>01</small><span>Une ligne par livraison</span></a>
+              <a class="slide-link" href="#slide-2" data-slide-link="2"><small>02</small><span>Objectif</span></a>
+              <a class="slide-link" href="#slide-3" data-slide-link="3"><small>03</small><span>Fixer le grain avant de choisir les colonnes</span></a>
+              <a class="slide-link" href="#slide-4" data-slide-link="4"><small>04</small><span>Faits, mesures et dimensions</span></a>
+              <a class="slide-link" href="#slide-5" data-slide-link="5"><small>05</small><span>Lire une étoile</span></a>
+              <a class="slide-link" href="#slide-6" data-slide-link="6"><small>06</small><span>Relier les clés et traiter les absences</span></a>
+              <a class="slide-link" href="#slide-7" data-slide-link="7"><small>07</small><span>Lire les contraintes PostgreSQL</span></a>
+              <a class="slide-link" href="#slide-8" data-slide-link="8"><small>08</small><span>Définir la frontière du modèle</span></a>
+              <a class="slide-link" href="#slide-9" data-slide-link="9"><small>09</small><span>Erreurs fréquentes</span></a>
+              <a class="slide-link" href="#slide-10" data-slide-link="10"><small>10</small><span>Exercice 1 — Choisir où ranger les champs</span></a>
+              <a class="slide-link" href="#slide-11" data-slide-link="11"><small>11</small><span>Exercice 2 — Dessiner le modèle de suivi</span></a>
+              <a class="slide-link" href="#slide-12" data-slide-link="12"><small>12</small><span>Exercice 3 — Corriger un coût multiplié après une jointure</span></a>
+              <a class="slide-link" href="#slide-13" data-slide-link="13"><small>13</small><span>Projet fil rouge — La cible de l’entrepôt</span></a>
+              <a class="slide-link" href="#slide-14" data-slide-link="14"><small>14</small><span>Jalon 2 — Recalculer les indicateurs au bon grain</span></a>
+              <a class="slide-link" href="#slide-15" data-slide-link="15"><small>15</small><span>Fiche de révision</span></a>
+              <a class="slide-link" href="#slide-16" data-slide-link="16"><small>16</small><span>Questions de révision</span></a>
+              <a class="slide-link" href="#slide-17" data-slide-link="17"><small>17</small><span>QCM — Questions 1 à 3</span></a>
+              <a class="slide-link" href="#slide-18" data-slide-link="18"><small>18</small><span>QCM — Questions 4 et 5</span></a>
+              <a class="slide-link" href="#slide-19" data-slide-link="19"><small>19</small><span>À retenir avant de préparer les sources</span></a>
+        </nav>
+        <a class="source-link" href="supports/02_modeliser.md" download>Support Markdown ↓</a>
+      </aside>
+      <div class="content-column">
+        <div id="slides">
+          <article class="slide-card" id="slide-1" aria-labelledby="slide-label-1">
+            <p class="question-kicker" id="slide-label-1">Modélisation dimensionnelle <span class="pill">1 / 19</span></p>
+            <div class="prose">
+<h1 id="une-ligne-par-livraison">Une ligne par livraison</h1>
+<p>Le responsable d’exploitation veut filtrer la ponctualité par semaine, zone, véhicule et chauffeur. Le modèle doit conserver chaque livraison et permettre ces regroupements.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-2" aria-labelledby="slide-label-2" hidden>
+            <p class="question-kicker" id="slide-label-2">Modélisation dimensionnelle <span class="pill">2 / 19</span></p>
+            <div class="prose">
+<h2 id="objectif">Objectif</h2>
+<p>Déclarer le grain, dessiner le schéma en étoile et identifier les clés qui relient chaque livraison aux dimensions. Décrire le comportement du modèle pour une annulation et une livraison avec une trace manquante.</p>
+<p><strong>Prérequis</strong> — Indicateurs du premier chapitre, lecture d’une clé primaire et d’une jointure SQL.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-3" aria-labelledby="slide-label-3" hidden>
+            <p class="question-kicker" id="slide-label-3">Modélisation dimensionnelle <span class="pill">3 / 19</span></p>
+            <div class="prose">
+<h2 id="fixer-le-grain-avant-de-choisir-les-colonnes">Fixer le grain avant de choisir les colonnes</h2>
+<p>Le <strong>grain</strong> indique ce que représente une ligne. Dans <code>fait_livraison</code>, une ligne représente une livraison identifiée par <code>livraison_id</code>, dans son état retenu pour ce lot.</p>
+<p><code>L001</code> et <code>L002</code> appartiennent toutes les deux à <code>T-A</code>. Elles occupent deux lignes et possèdent des coûts et des horaires distincts. Une future analyse à l’échelle de la tournée pourra les regrouper.</p>
+<p>Le fichier du dispatch peut contenir deux versions de <code>L002</code>. La table de faits attend une seule ligne pour cet identifiant.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-4" aria-labelledby="slide-label-4" hidden>
+            <p class="question-kicker" id="slide-label-4">Modélisation dimensionnelle <span class="pill">4 / 19</span></p>
+            <div class="prose">
+<h2 id="faits-mesures-et-dimensions">Faits, mesures et dimensions</h2>
+<div class="table-wrap" tabindex="0"><table>
+<thead>
+<tr>
+<th>Rôle</th>
+<th>Élément du modèle</th>
+<th>Utilité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fait</td>
+<td><code>fait_livraison</code></td>
+<td>Regrouper les mesures d’une livraison et ses liens vers les dimensions</td>
+</tr>
+<tr>
+<td>Mesure</td>
+<td><code>cout_chf</code>, <code>distance_m</code>, <code>retard_minutes</code></td>
+<td>Calculer des totaux ou des moyennes sur un périmètre explicite</td>
+</tr>
+<tr>
+<td>Attribut du fait</td>
+<td><code>statut</code>, <code>ponctuelle</code>, <code>tournee_id</code></td>
+<td>Filtrer ou regrouper les événements</td>
+</tr>
+<tr>
+<td>Dimension</td>
+<td>Jour, zone, véhicule, chauffeur</td>
+<td>Décrire les axes d’analyse par des attributs lisibles</td>
+</tr>
+</tbody>
+</table></div>
+<p>La ponctualité se recalcule avec un numérateur et un dénominateur après chaque regroupement. Pour combiner deux tournées de tailles différentes, additionner leurs nombres de livraisons à l’heure et leurs nombres de livraisons évaluables.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-5" aria-labelledby="slide-label-5" hidden>
+            <p class="question-kicker" id="slide-label-5">Modélisation dimensionnelle <span class="pill">5 / 19</span></p>
+            <div class="prose">
+<h2 id="lire-une-%C3%A9toile">Lire une étoile</h2>
+<figure class="course-diagram diagram-star" aria-labelledby="etoile-legende">
+  <div class="diagram-node diagram-focus star-fait"><strong><code>fait_livraison</code></strong><span>Une ligne par livraison</span></div>
+  <div class="diagram-node star-jour"><strong><code>dim_jour</code></strong><span>Jour promis et jour livré</span></div>
+  <div class="diagram-node star-chauffeur"><strong><code>dim_chauffeur</code></strong><span>Chauffeur et agence</span></div>
+  <div class="diagram-node star-vehicule"><strong><code>dim_vehicule</code></strong><span>Véhicule et type</span></div>
+  <div class="diagram-node star-zone"><strong><code>dim_zone</code></strong><span>Zone et coordonnées</span></div>
+  <figcaption id="etoile-legende">Chaque liaison représente une clé étrangère du fait vers une dimension.</figcaption>
+</figure>
+<p>Une même zone peut être référencée par plusieurs livraisons. Les coordonnées sont un attribut de <code>dim_zone</code>.</p>
+<p>La dimension jour joue deux rôles. <code>jour_promis</code> fixe la période de l’indicateur. <code>jour_livre</code> donne la date locale de la remise effective et reste vide pour une annulation.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-6" aria-labelledby="slide-label-6" hidden>
+            <p class="question-kicker" id="slide-label-6">Modélisation dimensionnelle <span class="pill">6 / 19</span></p>
+            <div class="prose">
+<h2 id="relier-les-cl%C3%A9s-et-traiter-les-absences">Relier les clés et traiter les absences</h2>
+<p><code>vehicule_id</code> est la <strong>clé métier</strong> fournie par le dispatch, par exemple <code>V01</code>. <code>vehicule_sk</code> est une <strong>clé technique</strong> attribuée dans l’entrepôt. Le chargement cherchera la clé technique à partir du code métier. Le chauffeur et la zone suivent la même règle.</p>
+<div class="table-wrap" tabindex="0"><table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Règle du modèle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>L004</code> est annulée</td>
+<td>Conserver le statut et la date promise. Laisser le jour livré et la ponctualité à <code>NULL</code>.</td>
+</tr>
+<tr>
+<td><code>L006</code> a été livrée avec une trace manquante</td>
+<td>Garder la livraison et laisser la distance à <code>NULL</code>.</td>
+</tr>
+<tr>
+<td>Le code chauffeur est inconnu</td>
+<td>Isoler la ligne à la préparation pour vérification du référentiel.</td>
+</tr>
+</tbody>
+</table></div>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-7" aria-labelledby="slide-label-7" hidden>
+            <p class="question-kicker" id="slide-label-7">Modélisation dimensionnelle <span class="pill">7 / 19</span></p>
+            <div class="prose">
+<h2 id="lire-les-contraintes-postgresql">Lire les contraintes PostgreSQL</h2>
+<pre tabindex="0"><code class="language-sql"><span class="hljs-keyword">CREATE TABLE</span> exemple_livraison (
+    livraison_id text <span class="hljs-keyword">PRIMARY KEY</span>,
+    vehicule_sk <span class="hljs-type">bigint</span> <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">REFERENCES</span> entrepot.dim_vehicule,
+    distance_m <span class="hljs-type">integer</span> <span class="hljs-keyword">CHECK</span> (distance_m <span class="hljs-operator">&gt;=</span> <span class="hljs-number">0</span>)
+);
+</code></pre>
+<p><code>PRIMARY KEY</code> impose une valeur unique et renseignée. <code>REFERENCES</code> exige un véhicule présent dans la dimension. <code>CHECK</code> refuse une distance négative et la colonne accepte <code>NULL</code>.</p>
+<p>Pour exécuter la correction complète de l’atelier, créer les dimensions et le fait à l’aide de <code>sandbox/pratique/modele_etoile.sql</code> depuis la racine du dépôt.</p>
+<pre tabindex="0"><code class="language-sh">docker compose -f sandbox/compose.yaml <span class="hljs-built_in">exec</span> -T postgres \
+  psql -v ON_ERROR_STOP=1 -U student -d formation \
+  &lt; sandbox/pratique/modele_etoile.sql
+</code></pre>
+<p><strong>Résultat attendu</strong> — Cinq tables vides dans <code>entrepot</code>. Leurs contraintes sont prêtes à accueillir les données préparées.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-8" aria-labelledby="slide-label-8" hidden>
+            <p class="question-kicker" id="slide-label-8">Modélisation dimensionnelle <span class="pill">8 / 19</span></p>
+            <div class="prose">
+<h2 id="d%C3%A9finir-la-fronti%C3%A8re-du-mod%C3%A8le">Définir la frontière du modèle</h2>
+<p>Le fait décrit les livraisons. Si l’on reçoit plus tard le coût total d’une tournée, on peut étudier un fait au grain <strong>une ligne par tournée</strong> ou une règle d’allocation explicite.</p>
+<p>Copier un coût de tournée de 60 CHF sur trois livraisons ferait apparaître 180 CHF à l’agrégation. Le grain de la source et celui de la mesure doivent correspondre.</p>
+<p>Les zones et les heures du modèle répondent aux premiers besoins. Étudier un itinéraire détaillé demandera en plus la séquence des arrêts et les distances entre arrêts.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-9" aria-labelledby="slide-label-9" hidden>
+            <p class="question-kicker" id="slide-label-9">Modélisation dimensionnelle <span class="pill">9 / 19</span></p>
+            <div class="prose">
+<h2 id="erreurs-fr%C3%A9quentes">Erreurs fréquentes</h2>
+<ul>
+<li>Dessiner la table avant de définir ce que représente une ligne.</li>
+<li>Confondre une tournée avec une livraison et répéter son coût.</li>
+<li>Joindre le fait sur un libellé de zone qui peut changer.</li>
+<li>Remplacer une distance inconnue par zéro.</li>
+<li>Confondre le jour promis et le jour effectivement livré.</li>
+</ul>
+            </div>
+          </article>
+          <article class="slide-card exercise" id="slide-10" aria-labelledby="slide-label-10" hidden>
+            <p class="question-kicker" id="slide-label-10">Modélisation dimensionnelle <span class="pill">10 / 19</span></p>
+            <div class="prose">
+<h2 id="exercice-1--choisir-o%C3%B9-ranger-les-champs">Exercice 1 — Choisir où ranger les champs</h2>
+<p><strong>Objectif</strong> — Relier chaque champ à son rôle. <strong>Prérequis</strong> — Lecture du schéma en étoile.</p>
+<p>Classer <code>distance_m</code>, <code>type_vehicule</code>, <code>agence</code>, <code>zone_id</code>, <code>cout_chf</code> et <code>jour_promis</code>. Indiquer la table et expliquer comment afficher le coût par type de véhicule.</p>
+<p><strong>Livrable et réussite</strong> — Un tableau des champs et le chemin de jointure utilisé pour le regroupement.</p>
+<details><summary>Indices gradués</summary>
+<ol>
+<li>Séparer les mesures observées sur une livraison des descriptions qui servent à filtrer.</li>
+<li>Relier l’événement au véhicule par la clé étrangère du fait.</li>
+</ol>
+</details>
+<details><summary>Correction expliquée</summary>
+<p><code>distance_m</code>, <code>cout_chf</code> et <code>jour_promis</code> sont dans <code>fait_livraison</code>. <code>jour_promis</code> référence <code>dim_jour</code>. <code>type_vehicule</code> est dans <code>dim_vehicule</code>, <code>agence</code> dans <code>dim_chauffeur</code>, <code>zone_id</code> dans <code>dim_zone</code>. Pour le coût moyen, joindre le fait au véhicule sur <code>vehicule_sk</code> et regrouper les livraisons effectuées par <code>type_vehicule</code>.</p>
+</details>
+            </div>
+          </article>
+          <article class="slide-card exercise" id="slide-11" aria-labelledby="slide-label-11" hidden>
+            <p class="question-kicker" id="slide-label-11">Modélisation dimensionnelle <span class="pill">11 / 19</span></p>
+            <div class="prose">
+<h2 id="exercice-2--dessiner-le-mod%C3%A8le-de-suivi">Exercice 2 — Dessiner le modèle de suivi</h2>
+<p><strong>Objectif</strong> — Proposer une étoile exploitable. <strong>Prérequis</strong> — Grain, clé primaire et clé étrangère.</p>
+<p>Dessiner le modèle nécessaire pour suivre le coût et les retards par semaine, véhicule et zone. Prévoir les dates promise et livrée, le lien avec le chauffeur et le traitement des annulations. Étiqueter chaque clé et sa cardinalité.</p>
+<p><strong>Livrable et réussite</strong> — Un schéma avec une ligne par livraison et des clés qui permettent de retrouver chaque axe de l’indicateur.</p>
+<details><summary>Indices gradués</summary>
+<ol>
+<li>Placer <code>fait_livraison</code> au centre.</li>
+<li>Relier les deux dates à la même table de jours, en précisant leur rôle.</li>
+</ol>
+</details>
+<details><summary>Correction expliquée</summary>
+<p><code>fait_livraison</code> est unique par <code>livraison_id</code>. Chaque fait pointe vers un chauffeur, un véhicule, une zone et un jour promis. Le jour livré est facultatif et référence aussi <code>dim_jour</code>. Un même jour, chauffeur, véhicule ou zone peut apparaître dans plusieurs faits. Le script <code>sandbox/pratique/modele_etoile.sql</code> est une réalisation de ce schéma.</p>
+</details>
+            </div>
+          </article>
+          <article class="slide-card exercise" id="slide-12" aria-labelledby="slide-label-12" hidden>
+            <p class="question-kicker" id="slide-label-12">Modélisation dimensionnelle <span class="pill">12 / 19</span></p>
+            <div class="prose">
+<h2 id="exercice-3--corriger-un-co%C3%BBt-multipli%C3%A9-apr%C3%A8s-une-jointure">Exercice 3 — Corriger un coût multiplié après une jointure</h2>
+<p><strong>Objectif</strong> — Repérer une incohérence de grains. <strong>Prérequis</strong> — Grain de livraison et cardinalité.</p>
+<p>La tournée <code>T-A</code> a trois livraisons. Une nouvelle table de préparation contient deux mesures pour cette tournée, une par rapport transmis. Une jointure par <code>tournee_id</code> produit six lignes. Expliquez le problème et proposez une règle qui préserve le grain de la mesure que vous voulez agréger.</p>
+<p><strong>Livrable et réussite</strong> — Le nombre de lignes attendu, le niveau de regroupement retenu et un contrôle avant et après la jointure.</p>
+<details><summary>Indices gradués</summary>
+<ol>
+<li>Comparer les nombres de lignes de chaque côté de la jointure.</li>
+<li>Déterminer si les deux rapports sont des versions ou des mesures indépendantes avant de les agréger.</li>
+</ol>
+</details>
+<details><summary>Correction expliquée</summary>
+<p>Chaque livraison rencontre deux rapports, ce qui explique <code>3 × 2</code>. Si ce sont des versions, retenir une version par tournée avec une règle de priorité documentée. Pour analyser un coût global de tournée, travailler au grain tournée et regrouper les livraisons à ce niveau avant la jointure. Vérifier l’unicité de la clé au niveau retenu et réconcilier la somme du coût avec sa source.</p>
+</details>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-13" aria-labelledby="slide-label-13" hidden>
+            <p class="question-kicker" id="slide-label-13">Modélisation dimensionnelle <span class="pill">13 / 19</span></p>
+            <div class="prose">
+<h2 id="projet-fil-rouge--la-cible-de-lentrep%C3%B4t">Projet fil rouge — La cible de l’entrepôt</h2>
+<p>Le schéma part de la fiche métier. La livraison est le fait central. Les dates, véhicules, chauffeurs et zones rendent les indicateurs comparables.</p>
+<p><strong>Livrables</strong> — Le schéma en étoile, une liste des règles <code>NULL</code> et unicité, et la correspondance des champs de source vers les champs cibles.</p>
+<p><strong>Validation</strong> — Le modèle représente <code>L004</code> sans jour livré et <code>L006</code> sans distance. Il offre une place à chacune des mesures nécessaires au responsable d’exploitation. Une seule ligne du fait peut porter l’identifiant <code>L002</code>.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-14" aria-labelledby="slide-label-14" hidden>
+            <p class="question-kicker" id="slide-label-14">Modélisation dimensionnelle <span class="pill">14 / 19</span></p>
+            <div class="prose">
+<h2 id="jalon-2--recalculer-les-indicateurs-au-bon-grain">Jalon 2 — Recalculer les indicateurs au bon grain</h2>
+<p>Reprendre le tableau de contrôle du premier chapitre. Prévoir une ligne de fait pour chacune des quatre livraisons. Annoter chacune avec sa tournée, ses clés de dimensions, son coût et sa ponctualité.</p>
+<ol>
+<li>Compter les lignes avant et après une jointure vers les zones ou les véhicules. Justifier le nombre attendu par la cardinalité.</li>
+<li>Reconstituer le coût moyen et la ponctualité de l’extrait à partir des deux tournées. Comparer à la moyenne simple des deux taux de ponctualité.</li>
+<li>Simuler un doublon de zone au moment d’une jointure. Identifier les lignes et les coûts que le doublon multiplierait, puis écrire le contrôle de clé qui l’empêche.</li>
+</ol>
+<details><summary>Valeurs de contrôle</summary>
+<p>Il y a <strong>quatre faits</strong> avec l’annulation. Une jointure vers une dimension conserve ces quatre lignes. Parmi les trois livraisons effectuées, on calcule <code>(1 + 1) / (2 + 1) = 66,7 %</code>. La moyenne simple des taux <code>50 %</code> et <code>100 %</code> donne <code>75 %</code> car elle donne le même poids à chaque tournée. Le coût moyen correct vaut <code>(27,50 + 9,50) / 3 = 12,33 CHF</code>.</p>
+<p>Si la jointure dédouble <code>Z-GE-C</code>, les deux faits de <code>T-A</code> seraient répétés. Le nombre de faits passerait à <strong>six</strong> et le coût des livraisons effectuées à <strong>64,50 CHF</strong>. L’unicité de <code>zone_sk</code> dans la dimension et de <code>zone_id</code> lors de la recherche du code métier protège le grain.</p>
+</details>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-15" aria-labelledby="slide-label-15" hidden>
+            <p class="question-kicker" id="slide-label-15">Modélisation dimensionnelle <span class="pill">15 / 19</span></p>
+            <div class="prose">
+<h2 id="fiche-de-r%C3%A9vision">Fiche de révision</h2>
+<ul>
+<li><strong>Grain</strong> — La nature d’une ligne.</li>
+<li><strong>Fait</strong> — L’événement mesuré, associé à ses clés et à son statut.</li>
+<li><strong>Dimension</strong> — Le contexte descriptif qui sert à filtrer et à regrouper.</li>
+<li><strong>Cas d’usage</strong> — Dans la distribution, une étoile par ligne de commande permet aussi de comparer des mesures par dépôt, date et produit.</li>
+</ul>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-16" aria-labelledby="slide-label-16" hidden>
+            <p class="question-kicker" id="slide-label-16">Modélisation dimensionnelle <span class="pill">16 / 19</span></p>
+            <div class="prose">
+<h2 id="questions-de-r%C3%A9vision">Questions de révision</h2>
+<ol>
+<li>Quel grain a <code>fait_livraison</code> ?</li>
+<li>Quelle différence entre <code>vehicule_id</code> et <code>vehicule_sk</code> ?</li>
+<li>Pourquoi deux clés pointent-elles vers <code>dim_jour</code> ?</li>
+<li>Pourquoi le fait garde-t-il une distance à <code>NULL</code> ?</li>
+<li>Pourquoi additionner les effectifs avant de recalculer la ponctualité ?</li>
+</ol>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-17" aria-labelledby="slide-label-17" hidden>
+            <p class="question-kicker" id="slide-label-17">Modélisation dimensionnelle <span class="pill">17 / 19</span></p>
+            <div class="prose">
+<h2 id="qcm--questions-1-%C3%A0-3">QCM — Questions 1 à 3</h2>
+<ol>
+<li>Quelle est la clé primaire du fait ? A. <code>tournee_id</code> · B. <code>vehicule_sk</code> · C. <code>livraison_id</code></li>
+<li>Où stocker le type de véhicule ? A. <code>dim_vehicule</code> · B. <code>dim_jour</code> · C. <code>dim_zone</code></li>
+<li>Quelle date groupe les indicateurs par jour dans le cas fil rouge ? A. Le jour livré · B. Le jour promis · C. Le jour de génération du rapport</li>
+</ol>
+<details><summary>Correction expliquée</summary>
+<ol>
+<li><strong>C</strong>. L’identifiant est unique au grain d’une livraison.</li>
+<li><strong>A</strong>. Le type décrit le véhicule et permet de regrouper les faits.</li>
+<li><strong>B</strong>. La règle métier est fixée sur la date promise locale.</li>
+</ol>
+</details>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-18" aria-labelledby="slide-label-18" hidden>
+            <p class="question-kicker" id="slide-label-18">Modélisation dimensionnelle <span class="pill">18 / 19</span></p>
+            <div class="prose">
+<h2 id="qcm--questions-4-et-5">QCM — Questions 4 et 5</h2>
+<ol start="4">
+<li>Un trajet manque. Quelle valeur donner à <code>distance_m</code> ? A. <code>NULL</code> · B. <code>0</code> · C. La moyenne de la tournée</li>
+<li>Que garantit <code>REFERENCES entrepot.dim_vehicule</code> ? A. Le tri des faits · B. L’unicité de la tournée · C. L’existence du véhicule référencé</li>
+</ol>
+<details><summary>Correction expliquée</summary>
+<ol start="4">
+<li><strong>A</strong>. Une absence de mesure est représentée explicitement.</li>
+<li><strong>C</strong>. La clé est recherchée dans la table référencée.</li>
+</ol>
+</details>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-19" aria-labelledby="slide-label-19" hidden>
+            <p class="question-kicker" id="slide-label-19">Modélisation dimensionnelle <span class="pill">19 / 19</span></p>
+            <div class="prose">
+<h2 id="%C3%A0-retenir-avant-de-pr%C3%A9parer-les-sources">À retenir avant de préparer les sources</h2>
+<p>Le schéma en étoile fixe le grain et les relations. Les clés, types et règles de nullité donnent des critères pour détecter les anomalies avant le chargement.</p>
+            </div>
+            <div class="chapter-end"><a class="button primary" href="03_preparer_donnees.html">Nettoyer et préparer les données →</a></div>
+          </article>
+        </div>
+        <nav class="card-controls" aria-label="Navigation des slides">
+          <button class="button" id="previous" disabled>← Précédente</button>
+          <span class="page-number" id="page-number" aria-hidden="true">01 / 19</span>
+          <button class="button primary" id="next">Suivante →</button>
+        </nav>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer"><span>Data Warehouse · Satom IT &amp; Learning Solutions</span></footer>
+  <script src="assets/slides.js" defer></script>
+</body>
+</html>

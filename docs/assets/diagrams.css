@@ -1,0 +1,250 @@
+.course-diagram {
+  --diagram-gap: .75rem;
+  --diagram-line: #82927b;
+  margin: 1.3rem 0;
+  font-size: .89em;
+  line-height: 1.45;
+  break-inside: avoid;
+}
+
+.course-diagram figcaption {
+  margin-top: .7rem;
+  color: var(--muted);
+  font-size: .88em;
+}
+
+.diagram-branches {
+  display: grid;
+  grid-template-columns: repeat(var(--branches), minmax(0, 1fr));
+  gap: var(--diagram-gap);
+}
+
+.diagram-problem {
+  --branches: 3;
+  --branch-inset: calc((100% - 2 * var(--diagram-gap)) / 6);
+}
+
+.diagram-pipeline {
+  --branches: 2;
+  --branch-inset: calc((100% - var(--diagram-gap)) / 4);
+}
+
+.diagram-node {
+  display: grid;
+  align-content: center;
+  gap: .25rem;
+  min-width: 0;
+  padding: .8rem .9rem;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--bg);
+}
+
+.diagram-node span {
+  color: var(--muted);
+  font-size: .88em;
+}
+
+.diagram-focus {
+  border-color: #cadf81;
+  background: var(--lime);
+}
+
+.diagram-focus span {
+  color: var(--green);
+}
+
+.diagram-center {
+  width: fit-content;
+  max-width: 100%;
+  min-width: min(100%, 15rem);
+  margin-inline: auto;
+  text-align: center;
+}
+
+.diagram-junction {
+  position: relative;
+  height: 1.7rem;
+}
+
+.diagram-junction::before,
+.diagram-junction::after {
+  position: absolute;
+  content: "";
+}
+
+.diagram-junction::before {
+  inset: 0 var(--branch-inset) auto;
+  height: .85rem;
+  border: 1px solid var(--diagram-line);
+  border-top: 0;
+  border-radius: 0 0 6px 6px;
+}
+
+.diagram-junction::after {
+  inset: 0 auto 0 50%;
+  border-left: 1px solid var(--diagram-line);
+}
+
+.diagram-pipeline .diagram-junction::after {
+  inset-block-start: .85rem;
+}
+
+.diagram-split {
+  transform: scaleY(-1);
+}
+
+.diagram-review {
+  border-color: #e1c8ad;
+  background: var(--orange-bg);
+}
+
+.diagram-review span {
+  color: var(--orange);
+}
+
+.diagram-timeline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--diagram-gap);
+}
+
+.diagram-timeline .diagram-node {
+  text-align: center;
+}
+
+.diagram-timeline time {
+  color: var(--green);
+  font-size: 1.3em;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.diagram-duration {
+  display: grid;
+  gap: .18rem;
+  min-width: 5rem;
+  text-align: center;
+  font-size: .9em;
+}
+
+.diagram-duration span {
+  position: relative;
+  border-top: 1px solid var(--diagram-line);
+}
+
+.diagram-duration span::after {
+  position: absolute;
+  top: -.22rem;
+  right: 0;
+  width: .4rem;
+  height: .4rem;
+  border-top: 1px solid var(--diagram-line);
+  border-right: 1px solid var(--diagram-line);
+  transform: rotate(45deg);
+  content: "";
+}
+
+.diagram-star {
+  --diagram-gap: 1.15rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-areas:
+    ". jour ."
+    "chauffeur fait vehicule"
+    ". zone ."
+    "legende legende legende";
+  gap: var(--diagram-gap);
+  max-width: 46rem;
+  margin-inline: auto;
+}
+
+.diagram-star .diagram-node {
+  position: relative;
+  text-align: center;
+}
+
+.diagram-star code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.star-fait { grid-area: fait; }
+.star-jour { grid-area: jour; }
+.star-chauffeur { grid-area: chauffeur; }
+.star-vehicule { grid-area: vehicule; }
+.star-zone { grid-area: zone; }
+.diagram-star figcaption { grid-area: legende; margin: 0; }
+
+.star-jour::after,
+.star-chauffeur::after,
+.star-vehicule::after,
+.star-zone::after {
+  position: absolute;
+  background: var(--diagram-line);
+  content: "";
+}
+
+.star-jour::after,
+.star-zone::after {
+  left: 50%;
+  width: 1px;
+  height: calc(var(--diagram-gap) + 2px);
+}
+
+.star-jour::after { top: 100%; }
+.star-zone::after { bottom: 100%; }
+
+.star-chauffeur::after,
+.star-vehicule::after {
+  top: 50%;
+  width: calc(var(--diagram-gap) + 2px);
+  height: 1px;
+}
+
+.star-chauffeur::after { left: 100%; }
+.star-vehicule::after { right: 100%; }
+
+@media (max-width: 600px) {
+  .diagram-problem .diagram-branches {
+    grid-template-columns: 1fr;
+    gap: .4rem;
+    padding-inline-start: .55rem;
+    border-inline-start: 2px solid var(--diagram-line);
+  }
+
+  .diagram-problem .diagram-junction::before {
+    display: none;
+  }
+
+  .diagram-node {
+    padding: .6rem .7rem;
+  }
+
+  .diagram-timeline {
+    gap: .45rem;
+  }
+
+  .diagram-duration {
+    min-width: 3rem;
+  }
+
+  .diagram-star {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "fait fait"
+      "jour chauffeur"
+      "vehicule zone"
+      "legende legende";
+    gap: var(--diagram-gap);
+  }
+
+  .star-jour::after,
+  .star-chauffeur::after,
+  .star-vehicule::after,
+  .star-zone::after {
+    display: none;
+  }
+}

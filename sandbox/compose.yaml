@@ -1,0 +1,47 @@
+name: data-warehouse
+
+services:
+  postgres:
+    image: postgres:17-bookworm
+    environment:
+      POSTGRES_DB: formation
+      POSTGRES_USER: student
+      POSTGRES_PASSWORD: student
+    ports:
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+
+  atelier:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg://student:student@postgres:5432/formation
+    ports:
+      - "127.0.0.1:${JUPYTER_HOST_PORT:-8888}:8888"
+    volumes:
+      - ./pratique:/atelier
+      - ./data:/atelier/data:ro
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - |
+          from urllib.request import urlopen
+          with urlopen("http://127.0.0.1:8888/api", timeout=3):
+              pass
+      interval: 3s
+      timeout: 5s
+      retries: 15
+
+volumes:
+  postgres-data:

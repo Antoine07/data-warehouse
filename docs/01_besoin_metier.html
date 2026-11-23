@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8f2">
+  <title>Le besoin métier · Data Warehouse</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/slides.css">
+  <link rel="stylesheet" href="assets/diagrams.css">
+  <noscript><style>
+    .slide-card[hidden]{display:block!important}.slide-card{margin-bottom:24px}
+    .card-controls,.deck-toolbar,.progress-line,#progress{display:none!important}
+  </style></noscript>
+</head>
+<body class="deck-page" data-deck="01_besoin_metier">
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="brand-icon" aria-hidden="true">dw.</span> Data Warehouse</a>
+    <nav class="header-actions" aria-label="Navigation principale">
+      <a class="back-link" href="index.html#parcours">Le cours</a>
+      <a class="back-link" href="index.html#atelier">Bac à sable</a>
+    </nav>
+  </header>
+  <main class="learning-main" id="contenu">
+    <div class="page-heading">
+      <div><p class="eyebrow">Jour 1 · Transport et logistique</p><h1>Le besoin métier</h1><p>Cadrer la décision, comprendre l’entrepôt et prendre en main l’atelier SQL.</p></div>
+      <span class="chapter-count">26 slides</span>
+    </div>
+    <div class="deck-toolbar">
+      <div class="mode-switch" role="group" aria-label="Mode d’affichage">
+        <button id="mode-slides" aria-pressed="true">Slides</button>
+        <button id="mode-reading" aria-pressed="false">Lecture continue</button>
+      </div>
+      <div class="toolbar-actions">
+        <button class="text-button mobile-only" id="toggle-outline" aria-expanded="false" aria-controls="outline">Sommaire</button>
+        <button class="text-button" id="fullscreen">Plein écran</button>
+        <button class="text-button" id="print">Imprimer / PDF</button>
+      </div>
+    </div>
+    <div class="progress-line"><span id="position" role="status" aria-live="polite">Slide 1 sur 26</span><span id="progress-label">4 %</span></div>
+    <progress id="progress" max="26" value="1" aria-label="Progression du chapitre"></progress>
+    <div class="learning-layout">
+      <aside class="sidebar" id="outline">
+        <p class="sidebar-title">DANS CE CHAPITRE</p>
+        <nav class="slide-list" aria-label="Sommaire des slides">
+              <a class="slide-link" href="#slide-1" data-slide-link="1" aria-current="step"><small>01</small><span>Le problème d’exploitation</span></a>
+              <a class="slide-link" href="#slide-2" data-slide-link="2"><small>02</small><span>Objectif de la journée</span></a>
+              <a class="slide-link" href="#slide-3" data-slide-link="3"><small>03</small><span>Activité — Cadrer la décision</span></a>
+              <a class="slide-link" href="#slide-4" data-slide-link="4"><small>04</small><span>Qu’est-ce qu’un Data Warehouse ?</span></a>
+              <a class="slide-link" href="#slide-5" data-slide-link="5"><small>05</small><span>Les architectures autour de l’entrepôt</span></a>
+              <a class="slide-link" href="#slide-6" data-slide-link="6"><small>06</small><span>Reconnaître la structure des données</span></a>
+              <a class="slide-link" href="#slide-7" data-slide-link="7"><small>07</small><span>Les outils et les gestes à maîtriser</span></a>
+              <a class="slide-link" href="#slide-8" data-slide-link="8"><small>08</small><span>Prise en main — Lire les zones en SQL</span></a>
+              <a class="slide-link" href="#slide-9" data-slide-link="9"><small>09</small><span>Les décisions à outiller</span></a>
+              <a class="slide-link" href="#slide-10" data-slide-link="10"><small>10</small><span>Recenser les sources</span></a>
+              <a class="slide-link" href="#slide-11" data-slide-link="11"><small>11</small><span>Écrire la règle de chaque indicateur</span></a>
+              <a class="slide-link" href="#slide-12" data-slide-link="12"><small>12</small><span>De l’heure promise à l’heure réelle</span></a>
+              <a class="slide-link" href="#slide-13" data-slide-link="13"><small>13</small><span>Un extrait du registre des livraisons</span></a>
+              <a class="slide-link" href="#slide-14" data-slide-link="14"><small>14</small><span>Lire le temps et la géographie</span></a>
+              <a class="slide-link" href="#slide-15" data-slide-link="15"><small>15</small><span>Erreurs fréquentes</span></a>
+              <a class="slide-link" href="#slide-16" data-slide-link="16"><small>16</small><span>Exercice 1 — Recalculer le taux de la tournée T-A</span></a>
+              <a class="slide-link" href="#slide-17" data-slide-link="17"><small>17</small><span>Exercice 2 — Définir une comparaison entre zones</span></a>
+              <a class="slide-link" href="#slide-18" data-slide-link="18"><small>18</small><span>Exercice 3 — Examiner une alerte de tournée</span></a>
+              <a class="slide-link" href="#slide-19" data-slide-link="19"><small>19</small><span>Projet fil rouge — Le cadrage attendu</span></a>
+              <a class="slide-link" href="#slide-20" data-slide-link="20"><small>20</small><span>Jalon 1 — Construire le tableau de référence à la main</span></a>
+              <a class="slide-link" href="#slide-21" data-slide-link="21"><small>21</small><span>Fiche de révision</span></a>
+              <a class="slide-link" href="#slide-22" data-slide-link="22"><small>22</small><span>Questions de révision</span></a>
+              <a class="slide-link" href="#slide-23" data-slide-link="23"><small>23</small><span>QCM — Questions 1 à 3</span></a>
+              <a class="slide-link" href="#slide-24" data-slide-link="24"><small>24</small><span>QCM — Questions 4 et 5</span></a>
+              <a class="slide-link" href="#slide-25" data-slide-link="25"><small>25</small><span>QCM — Repères sur les données et les outils</span></a>
+              <a class="slide-link" href="#slide-26" data-slide-link="26"><small>26</small><span>À retenir avant de modéliser</span></a>
+        </nav>
+        <a class="source-link" href="supports/01_besoin_metier.md" download>Support Markdown ↓</a>
+      </aside>
+      <div class="content-column">
+        <div id="slides">
+          <article class="slide-card" id="slide-1" aria-labelledby="slide-label-1">
+            <p class="question-kicker" id="slide-label-1">Jour 1 · Transport et logistique <span class="pill">1 / 26</span></p>
+            <div class="prose">
+<h1 id="le-probl%C3%A8me-dexploitation">Le problème d’exploitation</h1>
+<p>À Genève, un transporteur livre des colis en ville et dans les communes voisines. Chaque lundi, son responsable d’exploitation décide quelles tournées examiner. Une tournée regroupe les livraisons prévues pour un chauffeur et un véhicule.</p>
+<figure class="course-diagram diagram-problem" aria-labelledby="probleme-legende">
+  <div class="diagram-branches">
+    <div class="diagram-node"><strong>Retards signalés</strong><span>Des colis arrivent après l’heure promise.</span></div>
+    <div class="diagram-node"><strong>Coûts différents</strong><span>Les tournées ont des volumes de livraison différents.</span></div>
+    <div class="diagram-node"><strong>Distances incomplètes</strong><span>Certaines livraisons n’ont pas de trace GPS.</span></div>
+  </div>
+  <div class="diagram-junction" aria-hidden="true"></div>
+  <div class="diagram-node diagram-focus diagram-center"><strong>Quelles tournées examiner en priorité ?</strong></div>
+  <figcaption id="probleme-legende">Pour justifier son choix, l’exploitation doit décider quelles livraisons comparer et sur quelles informations s’appuyer.</figcaption>
+</figure>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-2" aria-labelledby="slide-label-2" hidden>
+            <p class="question-kicker" id="slide-label-2">Jour 1 · Transport et logistique <span class="pill">2 / 26</span></p>
+            <div class="prose">
+<h2 id="objectif-de-la-journ%C3%A9e">Objectif de la journée</h2>
+<p>Le fil rouge consiste à réunir les livraisons et les trajets dans un entrepôt pour comparer l’activité par tournée et par zone.</p>
+<p>Aujourd’hui, vous cadrez la décision, reconnaissez la structure des données et lisez une première table avec SQL. Vous calculez ensuite à la main un résultat que l’entrepôt devra reproduire.</p>
+<div class="table-wrap" tabindex="0"><table>
+<thead>
+<tr>
+<th>Horaire</th>
+<th>Activité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8 h 30 – 9 h 15</td>
+<td>Situation de départ et activité de cadrage</td>
+</tr>
+<tr>
+<td>9 h 15 – 10 h 30</td>
+<td>Mise en commun, repères sur l’entrepôt et les données, prise en main des outils</td>
+</tr>
+<tr>
+<td>10 h 30 – 12 h</td>
+<td>Sources, conventions de calcul et premier exemple guidé</td>
+</tr>
+<tr>
+<td>13 h – 14 h 30</td>
+<td>Dates locales, distances et comparaison entre tournées</td>
+</tr>
+<tr>
+<td>14 h 30 – 16 h 30</td>
+<td>Exercices chiffrés et restitution de la fiche métier</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Prérequis</strong> — Lire un tableau et calculer une moyenne ou un pourcentage.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-3" aria-labelledby="slide-label-3" hidden>
+            <p class="question-kicker" id="slide-label-3">Jour 1 · Transport et logistique <span class="pill">3 / 26</span></p>
+            <div class="prose">
+<h2 id="activit%C3%A9--cadrer-la-d%C3%A9cision">Activité — Cadrer la décision</h2>
+<p>Vous disposez d’un <strong>registre des livraisons</strong> qui indique les statuts, les heures et les coûts, de <strong>traces GPS</strong> pour les distances et de <strong>référentiels</strong> pour les chauffeurs, les véhicules et les zones.</p>
+<p>En quinze minutes, préparez une fiche pour le responsable d’exploitation.</p>
+<ol>
+<li>Reformulez la décision à prendre et proposez une période de comparaison.</li>
+<li>Indiquez quelles tournées ou livraisons vous compareriez. Comment tiendriez-vous compte de leurs volumes différents ?</li>
+<li>Proposez des chiffres pour justifier le choix et indiquez de quelles sources ils viendraient.</li>
+<li>Expliquez comment votre comparaison traiterait une livraison annulée et une distance manquante.</li>
+</ol>
+<p><strong>Livrable</strong> — Une fiche courte qui permet à une autre équipe de comprendre le périmètre et la raison de votre choix. Présentez-la avant d’appliquer en commun les conventions de calcul au premier extrait.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-4" aria-labelledby="slide-label-4" hidden>
+            <p class="question-kicker" id="slide-label-4">Jour 1 · Transport et logistique <span class="pill">4 / 26</span></p>
+            <div class="prose">
+<h2 id="quest-ce-quun-data-warehouse">Qu’est-ce qu’un Data Warehouse ?</h2>
+<p>Un <strong>Data Warehouse</strong>, ou <strong>entrepôt de données</strong>, réunit des données de plusieurs sources et conserve leur historique pour l’analyse. On y harmonise les identifiants, les dates et les unités pour pouvoir comparer des périodes, des zones ou des tournées.</p>
+<div class="table-wrap" tabindex="0"><table>
+<thead>
+<tr>
+<th>Usage</th>
+<th>Exemple en logistique</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Transactionnel (OLTP)</strong> — Enregistrer les opérations au fil de la journée</td>
+<td>Le dispatch saisit une livraison ou corrige son statut.</td>
+</tr>
+<tr>
+<td><strong>Analytique (OLAP)</strong> — Regrouper et comparer des données historiques</td>
+<td>L’exploitation calcule le taux de ponctualité par semaine et par zone sur plusieurs mois.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Dans l’atelier, PostgreSQL héberge les tables sources, les données préparées et le modèle analytique. Extraire les données, les transformer et les charger constitue un <strong>ETL</strong>. <a href="https://aws.amazon.com/fr/what-is/data-warehouse/">Présentation d’un entrepôt de données</a></p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-5" aria-labelledby="slide-label-5" hidden>
+            <p class="question-kicker" id="slide-label-5">Jour 1 · Transport et logistique <span class="pill">5 / 26</span></p>
+            <div class="prose">
+<h2 id="les-architectures-autour-de-lentrep%C3%B4t">Les architectures autour de l’entrepôt</h2>
+<div class="table-wrap" tabindex="0"><table>
+<thead>
+<tr>
+<th>Architecture</th>
+<th>À quoi elle sert</th>
+<th>Exemple en logistique</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Data mart</strong></td>
+<td>Servir les analyses d’un métier ou d’une équipe, souvent à partir d’un entrepôt commun</td>
+<td>Mettre à disposition de l’exploitation les seules données utiles au suivi des tournées.</td>
+</tr>
+<tr>
+<td><strong>Data lake</strong> ou lac de données</td>
+<td>Stocker des données variées, y compris dans leur format d’origine, pour plusieurs usages</td>
+<td>Conserver des exports de livraison, des événements GPS et des photos de remise.</td>
+</tr>
+<tr>
+<td><strong>Lakehouse</strong></td>
+<td>Organiser des tables sur le stockage d’un lac pour effectuer des analyses SQL et gérer leurs mises à jour</td>
+<td>Interroger l’historique des trajets et des livraisons dans des tables construites sur le lac.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Notre projet construit un <strong>entrepôt relationnel</strong> pour suivre les livraisons. <a href="https://aws.amazon.com/fr/what-is/data-mart/">Data mart</a> · <a href="https://aws.amazon.com/fr/what-is/data-lake/">Lac de données</a> · <a href="https://docs.databricks.com/aws/en/lakehouse/">Lakehouse</a></p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-6" aria-labelledby="slide-label-6" hidden>
+            <p class="question-kicker" id="slide-label-6">Jour 1 · Transport et logistique <span class="pill">6 / 26</span></p>
+            <div class="prose">
+<h2 id="reconna%C3%AEtre-la-structure-des-donn%C3%A9es">Reconnaître la structure des données</h2>
+<div class="table-wrap" tabindex="0"><table>
+<thead>
+<tr>
+<th>Famille</th>
+<th>Comment la reconnaître</th>
+<th>Exemple en logistique</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Structurées</strong></td>
+<td>Des lignes et des champs réguliers, dont on connaît le sens et le type</td>
+<td>Le registre CSV des livraisons et la table PostgreSQL des véhicules.</td>
+</tr>
+<tr>
+<td><strong>Semi-structurées</strong></td>
+<td>Des champs nommés, parfois imbriqués ou facultatifs</td>
+<td>Un événement GPS en JSON avec une heure et une position.</td>
+</tr>
+<tr>
+<td><strong>Non structurées</strong></td>
+<td>Le contenu demande une interprétation avant d’en tirer des champs exploitables</td>
+<td>Une photo de remise du colis.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Dans le registre de l’atelier, le coût est <strong>numérique</strong>, l’heure promise est <strong>temporelle</strong> et le statut est <strong>catégoriel</strong>. Le référentiel des zones ajoute des coordonnées <strong>géographiques</strong>. Ces distinctions déterminent les contrôles utiles, comme vérifier une unité ou conserver le fuseau d’un horaire. <a href="https://aws.amazon.com/compare/the-difference-between-structured-data-and-unstructured-data/">Structure des données</a></p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-7" aria-labelledby="slide-label-7" hidden>
+            <p class="question-kicker" id="slide-label-7">Jour 1 · Transport et logistique <span class="pill">7 / 26</span></p>
+            <div class="prose">
+<h2 id="les-outils-et-les-gestes-%C3%A0-ma%C3%AEtriser">Les outils et les gestes à maîtriser</h2>
+<div class="table-wrap" tabindex="0"><table>
+<thead>
+<tr>
+<th>Outil</th>
+<th>Ce que vous ferez pendant les TP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Docker Compose</strong></td>
+<td>Lancer les deux services de l’atelier, vérifier leur état et les arrêter à la fin du travail.</td>
+</tr>
+<tr>
+<td><strong>PostgreSQL et <code>psql</code></strong></td>
+<td>Consulter la base et ses tables, puis créer le modèle avec ses clés et ses contraintes. <code>psql</code> est le client en ligne de commande.</td>
+</tr>
+<tr>
+<td><strong>SQL</strong></td>
+<td>Sélectionner des champs, joindre des tables et calculer des indicateurs par tournée ou par zone.</td>
+</tr>
+<tr>
+<td><strong>Python et pandas</strong></td>
+<td>Lire les sources, convertir les horaires, traiter les doublons et justifier les rejets.</td>
+</tr>
+<tr>
+<td><strong>Psycopg et SQLAlchemy</strong></td>
+<td>Relier Python à PostgreSQL. Psycopg est le pilote. SQLAlchemy peut s’appuyer sur lui pour faciliter les lectures et les écritures avec pandas.</td>
+</tr>
+<tr>
+<td><strong>JupyterLab</strong></td>
+<td>Exécuter des cellules Python et inspecter les résultats intermédiaires dans un notebook.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Le TP propose SQLAlchemy comme option. On peut aussi ouvrir une connexion directement avec Psycopg. <a href="https://docs.docker.com/compose/">Documentation Docker Compose</a> · <a href="https://jupyterlab.readthedocs.io/en/stable/getting_started/overview.html">Prise en main de JupyterLab</a></p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-8" aria-labelledby="slide-label-8" hidden>
+            <p class="question-kicker" id="slide-label-8">Jour 1 · Transport et logistique <span class="pill">8 / 26</span></p>
+            <div class="prose">
+<h2 id="prise-en-main--lire-les-zones-en-sql">Prise en main — Lire les zones en SQL</h2>
+<p>Démarrer le <a href="index.html#atelier">bac à sable</a>, puis ouvrir le client <code>psql</code> depuis la racine du dépôt.</p>
+<pre tabindex="0"><code class="language-sh">docker compose -f sandbox/compose.yaml <span class="hljs-built_in">exec</span> postgres psql -U student -d formation
+</code></pre>
+<pre tabindex="0"><code class="language-sql"><span class="hljs-keyword">SELECT</span> zone_id, libelle
+<span class="hljs-keyword">FROM</span> sources.zones
+<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> zone_id;
+</code></pre>
+<p>Avant d’exécuter la requête, repérer les deux colonnes choisies par <code>SELECT</code>, la table lue par <code>FROM</code> et la colonne utilisée pour le tri. Vérifier le résultat, puis essayer de n’afficher que la zone de Nyon avec <code>WHERE</code>.</p>
+<details><summary>Résultat attendu et filtre corrigé</summary>
+<p>La première requête affiche <code>Z-GE-C</code> (Genève Centre), <code>Z-GE-O</code> (Genève Ouest) et <code>Z-VD</code> (Nyon), dans cet ordre. Le filtre <code>WHERE</code> sélectionne la ligne dont le code est <code>Z-VD</code>.</p>
+<pre tabindex="0"><code class="language-sql"><span class="hljs-keyword">SELECT</span> zone_id, libelle
+<span class="hljs-keyword">FROM</span> sources.zones
+<span class="hljs-keyword">WHERE</span> zone_id <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;Z-VD&#x27;</span>;
+</code></pre>
+</details>
+<p>Pour quitter <code>psql</code>, taper <code>\q</code>. <a href="https://www.postgresql.org/docs/17/tutorial-select.html">Lire une table avec SQL</a></p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-9" aria-labelledby="slide-label-9" hidden>
+            <p class="question-kicker" id="slide-label-9">Jour 1 · Transport et logistique <span class="pill">9 / 26</span></p>
+            <div class="prose">
+<h2 id="les-d%C3%A9cisions-%C3%A0-outiller">Les décisions à outiller</h2>
+<ul>
+<li><strong>Planification</strong> — Dans quelles zones les retards se répètent-ils à une même heure ? Où tester un créneau différent ?</li>
+<li><strong>Flotte</strong> — Sur quelles tournées le coût par livraison est-il le plus élevé ? Quel type de véhicule comparer sur des tournées comparables ?</li>
+<li><strong>Trajets</strong> — Où observe-t-on à la fois un kilométrage élevé et des retards ? Quelles tournées faut-il examiner avant de modifier leurs étapes ?</li>
+</ul>
+<p>Chaque comparaison indique sa période, le volume de livraisons et la couverture des distances. Un écart observé sert à orienter l’enquête.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-10" aria-labelledby="slide-label-10" hidden>
+            <p class="question-kicker" id="slide-label-10">Jour 1 · Transport et logistique <span class="pill">10 / 26</span></p>
+            <div class="prose">
+<h2 id="recenser-les-sources">Recenser les sources</h2>
+<div class="table-wrap" tabindex="0"><table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Champs utiles</th>
+<th>Questions à vérifier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Export du dispatch <code>data/livraisons.csv</code></td>
+<td>Identifiant, tournée, statut, heures, coût, date d’export</td>
+<td>Comment reconnaître une nouvelle version ? Quelle horloge fait foi ?</td>
+</tr>
+<tr>
+<td>PostgreSQL <code>sources.trajets</code></td>
+<td>Identifiant de livraison et distance observée en mètres</td>
+<td>Toutes les livraisons ont-elles une trace ? Que mesure la distance ?</td>
+</tr>
+<tr>
+<td>PostgreSQL <code>sources.chauffeurs</code>, <code>sources.vehicules</code>, <code>sources.zones</code></td>
+<td>Codes, agence, type de véhicule et coordonnées de zone</td>
+<td>Quels codes sont valides ? Quelle est la précision des coordonnées ?</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Clé de rapprochement</strong> — L’identifiant de livraison relie le dispatch au trajet. Les codes chauffeur, véhicule et zone relient le dispatch aux référentiels correspondants.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-11" aria-labelledby="slide-label-11" hidden>
+            <p class="question-kicker" id="slide-label-11">Jour 1 · Transport et logistique <span class="pill">11 / 26</span></p>
+            <div class="prose">
+<h2 id="%C3%A9crire-la-r%C3%A8gle-de-chaque-indicateur">Écrire la règle de chaque indicateur</h2>
+<div class="table-wrap" tabindex="0"><table>
+<thead>
+<tr>
+<th>Indicateur</th>
+<th>Calcul dans ce cours</th>
+<th>Périmètre</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Coût par livraison</td>
+<td>Somme des coûts ÷ nombre de livraisons</td>
+<td>Livraisons effectuées, coûts connus en CHF</td>
+</tr>
+<tr>
+<td>Ponctualité</td>
+<td>Livraisons effectuées à l’heure ÷ livraisons évaluables</td>
+<td>Une livraison est à l’heure si son horodatage réel est inférieur ou égal à l’heure promise</td>
+</tr>
+<tr>
+<td>Retard</td>
+<td>Écart entre l’heure réelle et l’heure promise, ramené à zéro en cas d’avance</td>
+<td>Minutes, pour une livraison évaluable</td>
+</tr>
+<tr>
+<td>Couverture des distances</td>
+<td>Livraisons avec une distance renseignée et valide ÷ livraisons effectuées</td>
+<td>Le kilométrage affiché porte sur les trajets couverts</td>
+</tr>
+</tbody>
+</table></div>
+<p>Pour une comparaison par jour, la période se lit sur la <strong>date promise à Genève</strong>. Si le dénominateur vaut zéro, on affiche « sans observation ».</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-12" aria-labelledby="slide-label-12" hidden>
+            <p class="question-kicker" id="slide-label-12">Jour 1 · Transport et logistique <span class="pill">12 / 26</span></p>
+            <div class="prose">
+<h2 id="de-lheure-promise-%C3%A0-lheure-r%C3%A9elle">De l’heure promise à l’heure réelle</h2>
+<p>Le 1er décembre, le registre de la livraison <code>L002</code> donne deux horaires. Les voici ramenés à l’heure locale de Genève.</p>
+<figure class="course-diagram" aria-labelledby="retard-legende">
+  <div class="diagram-timeline">
+    <div class="diagram-node">
+      <span>Heure promise</span>
+      <time datetime="2026-12-01T09:30:00+01:00">9 h 30</time>
+    </div>
+    <div class="diagram-duration"><strong>10 min</strong><span aria-hidden="true"></span></div>
+    <div class="diagram-node diagram-review">
+      <span>Heure réelle</span>
+      <time datetime="2026-12-01T09:40:00+01:00">9 h 40</time>
+    </div>
+  </div>
+  <figcaption id="retard-legende">Les deux heures sont connues. Cette livraison compte parmi les livraisons évaluables et parmi celles en retard.</figcaption>
+</figure>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-13" aria-labelledby="slide-label-13" hidden>
+            <p class="question-kicker" id="slide-label-13">Jour 1 · Transport et logistique <span class="pill">13 / 26</span></p>
+            <div class="prose">
+<h2 id="un-extrait-du-registre-des-livraisons">Un extrait du registre des livraisons</h2>
+<p>Le tableau présente quatre livraisons de la journée du 1er décembre, avec les heures converties à Genève. La version de <code>L002</code> est celle retenue en fin de matinée.</p>
+<div class="table-wrap" tabindex="0"><table>
+<thead>
+<tr>
+<th>Livraison</th>
+<th>Tournée</th>
+<th>Heure promise</th>
+<th>Heure réelle</th>
+<th>Coût</th>
+<th>Distance observée</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L001</td>
+<td>T-A</td>
+<td>9 h 00</td>
+<td>8 h 55</td>
+<td>12,40 CHF</td>
+<td>3 200 m</td>
+</tr>
+<tr>
+<td>L002</td>
+<td>T-A</td>
+<td>9 h 30</td>
+<td>9 h 40</td>
+<td>15,10 CHF</td>
+<td>4 700 m</td>
+</tr>
+<tr>
+<td>L003</td>
+<td>T-B</td>
+<td>10 h 00</td>
+<td>10 h 00</td>
+<td>9,50 CHF</td>
+<td>8 900 m</td>
+</tr>
+<tr>
+<td>L004</td>
+<td>T-B</td>
+<td>11 h 00</td>
+<td>Annulée</td>
+<td>0,00 CHF</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>Le coût moyen vaut <code>(12,40 + 15,10 + 9,50) / 3</code>, soit <strong>12,33 CHF</strong>. Deux des trois livraisons évaluables sont à l’heure, soit <strong>66,7 %</strong>.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-14" aria-labelledby="slide-label-14" hidden>
+            <p class="question-kicker" id="slide-label-14">Jour 1 · Transport et logistique <span class="pill">14 / 26</span></p>
+            <div class="prose">
+<h2 id="lire-le-temps-et-la-g%C3%A9ographie">Lire le temps et la géographie</h2>
+<p>La livraison <code>L005</code> est enregistrée le 30 novembre à <code>23:20 UTC</code>. À Genève, il est alors <code>00:20</code> le 1er décembre. Un regroupement journalier utilise la date locale annoncée dans la définition de l’indicateur.</p>
+<p>Les points de latitude et de longitude représentent des <strong>zones</strong> du cas. Une distance observée de <code>3 200 m</code> correspond à <code>3,2 km</code>. Pour comparer des tournées, on distingue la distance attribuée à chaque livraison, le coût associé et le nombre de trajets effectivement mesurés.</p>
+<p>Pour tester une nouvelle tournée, le transporteur tient aussi compte des créneaux, de la capacité des véhicules et du temps de service aux arrêts.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-15" aria-labelledby="slide-label-15" hidden>
+            <p class="question-kicker" id="slide-label-15">Jour 1 · Transport et logistique <span class="pill">15 / 26</span></p>
+            <div class="prose">
+<h2 id="erreurs-fr%C3%A9quentes">Erreurs fréquentes</h2>
+<ul>
+<li>Compter les annulations dans le dénominateur de la ponctualité.</li>
+<li>Présenter un taux sans le nombre de livraisons évaluables.</li>
+<li>Attribuer une distance nulle à une trace GPS manquante.</li>
+<li>Comparer des jours UTC à des jours d’exploitation à Genève.</li>
+<li>Tirer une conclusion sur un véhicule à partir d’une seule tournée.</li>
+</ul>
+            </div>
+          </article>
+          <article class="slide-card exercise" id="slide-16" aria-labelledby="slide-label-16" hidden>
+            <p class="question-kicker" id="slide-label-16">Jour 1 · Transport et logistique <span class="pill">16 / 26</span></p>
+            <div class="prose">
+<h2 id="exercice-1--recalculer-le-taux-de-la-tourn%C3%A9e-t-a">Exercice 1 — Recalculer le taux de la tournée T-A</h2>
+<p><strong>Objectif</strong> — Appliquer une règle d’indicateur à un sous-ensemble. <strong>Prérequis</strong> — Le tableau des quatre livraisons et la définition de ponctualité.</p>
+<p>Sur le tableau d’exemple, calculer le taux de ponctualité et le coût moyen de <code>T-A</code>. Donner le nombre de livraisons au dénominateur et expliquer le cas d’une livraison effectuée exactement à l’heure promise.</p>
+<p><strong>Livrable et réussite</strong> — Deux résultats chiffrés avec le calcul et les unités.</p>
+<details><summary>Indices gradués</summary>
+<ol>
+<li>Filtrer les lignes sur <code>T-A</code>.</li>
+<li>Compter les livraisons à l’heure parmi les livraisons évaluables.</li>
+</ol>
+</details>
+<details><summary>Correction expliquée</summary>
+<p><code>L001</code> est à l’heure et <code>L002</code> en retard. La ponctualité vaut <code>1 / 2</code>, soit <strong>50 %</strong>. Le coût vaut <code>(12,40 + 15,10) / 2</code>, soit <strong>13,75 CHF</strong>. Une livraison effectuée exactement à l’heure promise respecte la promesse.</p>
+</details>
+            </div>
+          </article>
+          <article class="slide-card exercise" id="slide-17" aria-labelledby="slide-label-17" hidden>
+            <p class="question-kicker" id="slide-label-17">Jour 1 · Transport et logistique <span class="pill">17 / 26</span></p>
+            <div class="prose">
+<h2 id="exercice-2--d%C3%A9finir-une-comparaison-entre-zones">Exercice 2 — Définir une comparaison entre zones</h2>
+<p><strong>Objectif</strong> — Formuler un besoin vérifiable. <strong>Prérequis</strong> — Les règles de ponctualité et l’inventaire des sources.</p>
+<p>L’exploitation veut comparer Genève Centre et Genève Ouest sur une semaine. Rédiger la définition de l’indicateur à calculer et indiquer les colonnes et la clé nécessaires. Préciser la date utilisée pour choisir la semaine et le traitement des annulations.</p>
+<p><strong>Livrable et réussite</strong> — Une fiche qui permet à une autre personne de reproduire le même chiffre et de retrouver le volume sur lequel il repose.</p>
+<details><summary>Indices gradués</summary>
+<ol>
+<li>Identifier la date métier et la population observée.</li>
+<li>Vérifier le rôle de <code>zone_id</code> et celui des deux horaires.</li>
+</ol>
+</details>
+<details><summary>Correction expliquée</summary>
+<p>Filtrer sur la semaine de <strong>date promise en <code>Europe/Zurich</code></strong>. Regrouper par <code>zone_id</code>, puis joindre <code>sources.zones</code> pour afficher les libellés. Pour chaque zone, calculer le rapport des livraisons à l’heure aux livraisons effectuées évaluables. Afficher aussi les effectifs. Présenter les annulations avec leur propre compteur.</p>
+</details>
+            </div>
+          </article>
+          <article class="slide-card exercise" id="slide-18" aria-labelledby="slide-label-18" hidden>
+            <p class="question-kicker" id="slide-label-18">Jour 1 · Transport et logistique <span class="pill">18 / 26</span></p>
+            <div class="prose">
+<h2 id="exercice-3--examiner-une-alerte-de-tourn%C3%A9e">Exercice 3 — Examiner une alerte de tournée</h2>
+<p><strong>Objectif</strong> — Détecter une comparaison trompeuse. <strong>Prérequis</strong> — Distance, couverture et choix du dénominateur.</p>
+<p>Sur une journée, <code>T-A</code> totalise 48 km observés pour 8 livraisons, toutes couvertes. <code>T-B</code> totalise 30 km observés pour 10 livraisons, dont 5 seulement ont une trace. Un tableau conseille de revoir <code>T-A</code> car <code>48 / 8 &gt; 30 / 10</code>.</p>
+<p><strong>Livrable et réussite</strong> — Donner les couvertures, recalculer les deux distances moyennes parmi les livraisons observées et proposer une vérification avant décision.</p>
+<details><summary>Indices gradués</summary>
+<ol>
+<li>Repérer le nombre de distances effectivement mesurées.</li>
+<li>Utiliser ce nombre dans une moyenne des distances observées.</li>
+</ol>
+</details>
+<details><summary>Correction expliquée</summary>
+<p>Les couvertures sont <strong>100 %</strong> et <strong>50 %</strong>. Les moyennes observées sont <code>48 / 8 = 6 km</code> et <code>30 / 5 = 6 km</code>. Il faut d’abord enquêter sur les cinq traces manquantes de <code>T-B</code>, puis comparer des tournées semblables en volume, créneaux et type de véhicule.</p>
+</details>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-19" aria-labelledby="slide-label-19" hidden>
+            <p class="question-kicker" id="slide-label-19">Jour 1 · Transport et logistique <span class="pill">19 / 26</span></p>
+            <div class="prose">
+<h2 id="projet-fil-rouge--le-cadrage-attendu">Projet fil rouge — Le cadrage attendu</h2>
+<p><strong>Utilisateur</strong> — Le responsable d’exploitation du transporteur.</p>
+<p><strong>Livrable</strong> — Reprendre la fiche de cadrage. Y préciser les indicateurs retenus, leurs unités et leurs périmètres. Ajouter la source de chaque champ, la couverture des mesures et un calcul de référence vérifiable à la main.</p>
+<p><strong>Validation</strong> — Une autre équipe retrouve le même dénominateur et les mêmes valeurs sur l’extrait. Elle sait aussi quelles données demander avant d’évaluer une optimisation de tournée.</p>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-20" aria-labelledby="slide-label-20" hidden>
+            <p class="question-kicker" id="slide-label-20">Jour 1 · Transport et logistique <span class="pill">20 / 26</span></p>
+            <div class="prose">
+<h2 id="jalon-1--construire-le-tableau-de-r%C3%A9f%C3%A9rence-%C3%A0-la-main">Jalon 1 — Construire le tableau de référence à la main</h2>
+<p>Reprendre les quatre livraisons de l’extrait. Ce tableau servira ensuite à vérifier le schéma en étoile.</p>
+<ol>
+<li>Pour chaque livraison effectuée, calculer l’écart entre heure réelle et heure promise, puis le retard et le statut de ponctualité.</li>
+<li>Pour chaque tournée, compter les livraisons effectuées et ponctuelles, puis calculer le coût total et le coût moyen.</li>
+<li>Convertir les distances en kilomètres. Calculer la couverture et la distance totale observée pour chaque tournée.</li>
+<li>Reconstituer les totaux puis les taux de l’extrait entier à partir des effectifs et des sommes.</li>
+</ol>
+<details><summary>Valeurs de contrôle</summary>
+<div class="table-wrap" tabindex="0"><table>
+<thead>
+<tr>
+<th>Tournée</th>
+<th>Effectuées</th>
+<th>À l’heure</th>
+<th>Coût total</th>
+<th>Distance observée</th>
+<th>Couverture</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T-A</td>
+<td>2</td>
+<td>1</td>
+<td>27,50 CHF</td>
+<td>7,9 km</td>
+<td>2 sur 2</td>
+</tr>
+<tr>
+<td>T-B</td>
+<td>1</td>
+<td>1</td>
+<td>9,50 CHF</td>
+<td>8,9 km</td>
+<td>1 sur 1</td>
+</tr>
+<tr>
+<td>Total</td>
+<td>3</td>
+<td>2</td>
+<td>37,00 CHF</td>
+<td>16,8 km</td>
+<td>3 sur 3</td>
+</tr>
+</tbody>
+</table></div>
+<p>Les écarts sont <strong>−5, +10 et 0 minutes</strong>. La ponctualité de l’extrait est <strong>66,7 %</strong> et le coût moyen est <strong>12,33 CHF</strong>. <code>L004</code> reste dans le décompte des annulations.</p>
+</details>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-21" aria-labelledby="slide-label-21" hidden>
+            <p class="question-kicker" id="slide-label-21">Jour 1 · Transport et logistique <span class="pill">21 / 26</span></p>
+            <div class="prose">
+<h2 id="fiche-de-r%C3%A9vision">Fiche de révision</h2>
+<ul>
+<li><strong>Entrepôt de données</strong> — Plusieurs sources harmonisées et un historique organisé pour l’analyse.</li>
+<li><strong>Outils</strong> — SQL interroge les tables PostgreSQL. Python et pandas préparent les données de l’atelier.</li>
+<li><strong>Grain métier</strong> — L’unité observée ici est la livraison. Une tournée regroupe plusieurs livraisons.</li>
+<li><strong>Indicateur</strong> — Une définition précise l’unité, le périmètre, la date et les règles d’inclusion.</li>
+<li><strong>Source</strong> — L’export du dispatch, les trajets et les référentiels se rapprochent par des identifiants.</li>
+<li><strong>Cas d’usage</strong> — Un transporteur compare ses zones et ses tournées pour cibler des actions de planification.</li>
+</ul>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-22" aria-labelledby="slide-label-22" hidden>
+            <p class="question-kicker" id="slide-label-22">Jour 1 · Transport et logistique <span class="pill">22 / 26</span></p>
+            <div class="prose">
+<h2 id="questions-de-r%C3%A9vision">Questions de révision</h2>
+<ol>
+<li>Quel rapport entre une livraison et une tournée ?</li>
+<li>Quelle date sert au découpage journalier ?</li>
+<li>Quel est le dénominateur du taux de ponctualité ?</li>
+<li>Que renseigne le taux de couverture GPS ?</li>
+<li>Quelle décision peut suivre un retard récurrent dans un créneau ?</li>
+<li>Quel usage de l’entrepôt demande de conserver un historique ?</li>
+<li>À quoi servent les clauses <code>SELECT</code>, <code>FROM</code> et <code>WHERE</code> ?</li>
+</ol>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-23" aria-labelledby="slide-label-23" hidden>
+            <p class="question-kicker" id="slide-label-23">Jour 1 · Transport et logistique <span class="pill">23 / 26</span></p>
+            <div class="prose">
+<h2 id="qcm--questions-1-%C3%A0-3">QCM — Questions 1 à 3</h2>
+<ol>
+<li>Quel niveau d’observation choisit-on ? A. Le chauffeur · B. La livraison · C. Le véhicule</li>
+<li>Une livraison effectuée exactement à l’heure promise est-elle à l’heure ? A. Oui · B. Non · C. Cela dépend de la zone</li>
+<li>Quelle unité utilise le champ <code>distance_m</code> ? A. Le kilomètre · B. La minute · C. Le mètre</li>
+</ol>
+<details><summary>Correction expliquée</summary>
+<ol>
+<li><strong>B</strong>. Chaque livraison est un événement qui peut être relié à une tournée.</li>
+<li><strong>A</strong>. La règle inclut l’égalité avec l’heure promise.</li>
+<li><strong>C</strong>. On divise la distance par <code>1 000</code> pour l’afficher en kilomètres.</li>
+</ol>
+</details>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-24" aria-labelledby="slide-label-24" hidden>
+            <p class="question-kicker" id="slide-label-24">Jour 1 · Transport et logistique <span class="pill">24 / 26</span></p>
+            <div class="prose">
+<h2 id="qcm--questions-4-et-5">QCM — Questions 4 et 5</h2>
+<ol start="4">
+<li>Quel champ rapproche les trajets et le dispatch ? A. Le coût · B. Le jour · C. L’identifiant de livraison</li>
+<li>Une tournée a zéro livraison évaluable. Quelle ponctualité afficher ? A. 0 % · B. Sans observation · C. 100 %</li>
+</ol>
+<details><summary>Correction expliquée</summary>
+<ol start="4">
+<li><strong>C</strong>. L’identifiant désigne le même événement dans les deux sources.</li>
+<li><strong>B</strong>. Le rapport est indéfini lorsque son dénominateur vaut zéro.</li>
+</ol>
+</details>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-25" aria-labelledby="slide-label-25" hidden>
+            <p class="question-kicker" id="slide-label-25">Jour 1 · Transport et logistique <span class="pill">25 / 26</span></p>
+            <div class="prose">
+<h2 id="qcm--rep%C3%A8res-sur-les-donn%C3%A9es-et-les-outils">QCM — Repères sur les données et les outils</h2>
+<ol start="6">
+<li>Où comparer la ponctualité par zone sur plusieurs mois ? A. Dans l’entrepôt · B. Dans l’écran de saisie de tournée · C. Dans un seul événement GPS</li>
+<li>Comment qualifier un événement GPS envoyé sous forme d’objet JSON à champs facultatifs ? A. Structuré en tableau · B. Semi-structuré · C. Non structuré</li>
+<li>Que lance Docker Compose pendant cet atelier ? A. Les calculs métier · B. Les corrections du cours · C. PostgreSQL et JupyterLab</li>
+</ol>
+<details><summary>Correction expliquée</summary>
+<ol start="6">
+<li><strong>A</strong>. L’entrepôt rassemble un historique adapté aux comparaisons sur plusieurs périodes.</li>
+<li><strong>B</strong>. Les clés décrivent les champs, qui peuvent être imbriqués ou facultatifs.</li>
+<li><strong>C</strong>. Le fichier Compose déclare les deux services de l’atelier.</li>
+</ol>
+</details>
+            </div>
+          </article>
+          <article class="slide-card" id="slide-26" aria-labelledby="slide-label-26" hidden>
+            <p class="question-kicker" id="slide-label-26">Jour 1 · Transport et logistique <span class="pill">26 / 26</span></p>
+            <div class="prose">
+<h2 id="%C3%A0-retenir-avant-de-mod%C3%A9liser">À retenir avant de modéliser</h2>
+<p>Les décisions d’exploitation déterminent les indicateurs. Leurs règles de calcul déterminent les champs, le grain et les clés nécessaires. Le modèle du prochain chapitre s’appuie sur cette fiche.</p>
+            </div>
+            <div class="chapter-end"><a class="button primary" href="02_modeliser.html">Le schéma en étoile →</a></div>
+          </article>
+        </div>
+        <nav class="card-controls" aria-label="Navigation des slides">
+          <button class="button" id="previous" disabled>← Précédente</button>
+          <span class="page-number" id="page-number" aria-hidden="true">01 / 26</span>
+          <button class="button primary" id="next">Suivante →</button>
+        </nav>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer"><span>Data Warehouse · Satom IT &amp; Learning Solutions</span></footer>
+  <script src="assets/slides.js" defer></script>
+</body>
+</html>

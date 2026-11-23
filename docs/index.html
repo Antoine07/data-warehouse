@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8f2">
+  <title>Data Warehouse · Transport et logistique</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/slides.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="brand-icon" aria-hidden="true">dw.</span> Data Warehouse</a>
+    <nav class="header-actions" aria-label="Navigation principale">
+      <a class="back-link" href="#parcours">Le cours</a>
+      <a class="back-link" href="#atelier">Bac à sable</a>
+    </nav>
+  </header>
+  <main class="home" id="contenu">
+    <section class="hero" aria-labelledby="titre">
+      <div>
+        <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> Satom IT &amp; Learning Solutions</p>
+        <h1 id="titre">Data Warehouse.<br><span>Transport et logistique.</span></h1>
+        <p class="hero-description">À partir de données de livraison, concevoir un entrepôt qui permette de suivre les coûts, les retards et les tournées à examiner.</p>
+        <div class="actions">
+          <a class="button primary" href="01_besoin_metier.html">Commencer le parcours →</a>
+          <a class="button" href="#atelier">Préparer l’atelier</a>
+        </div>
+        <p class="hero-note">Genève · 7 au 11 décembre 2026</p>
+      </div>
+      <div class="hero-illustration">
+        <div class="diagram-heading"><span class="mini-label">Le cas fil rouge</span><span class="pill">Genève et alentours</span></div>
+        <div class="flow-step"><div><small>CIBLER</small><strong>Quelles tournées faut-il examiner&nbsp;?</strong></div></div>
+        <div class="flow-connector" aria-hidden="true">↓</div>
+        <div class="flow-step treatment"><div><small>MODÉLISER</small><strong>Une ligne par livraison</strong></div></div>
+        <div class="flow-connector" aria-hidden="true">↓</div>
+        <div class="flow-step"><div><small>PRÉPARER</small><strong>Livraisons, référentiels et distances</strong></div></div>
+      </div>
+    </section>
+
+    <section class="home-path-section" id="parcours" aria-labelledby="chapitres">
+      <div class="section-heading"><h2 id="chapitres">Le parcours</h2></div>
+      <nav class="path-grid" aria-label="Chapitres du cours">
+        <a class="path-card course-card" href="01_besoin_metier.html">
+          <span class="card-top"><span class="step-number">01</span><span class="pill">Jour 1</span></span>
+          <h3>Le besoin métier</h3>
+          <p>Cadrer la décision, situer l’entrepôt et interroger les premières données avec SQL.</p>
+          <span class="card-bottom">Ouvrir le chapitre <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="path-card course-card" href="02_modeliser.html">
+          <span class="card-top"><span class="step-number">02</span><span class="pill">Modélisation</span></span>
+          <h3>Le schéma en étoile</h3>
+          <p>Fixer le grain, identifier les dimensions et relier les clés de l’entrepôt.</p>
+          <span class="card-bottom">Ouvrir le chapitre <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="path-card course-card" href="03_preparer_donnees.html">
+          <span class="card-top"><span class="step-number">03</span><span class="pill">Qualité des données</span></span>
+          <h3>Nettoyer et préparer</h3>
+          <p>Rapprocher les sources, traiter les versions et tracer les rejets avec pandas et PostgreSQL.</p>
+          <span class="card-bottom">Ouvrir le chapitre <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="path-card course-card" href="#atelier">
+          <span class="card-top"><span class="step-number">TP</span><span class="pill">Docker</span></span>
+          <h3>Le bac à sable</h3>
+          <p>Démarrer PostgreSQL et JupyterLab pour travailler avec les données de l’atelier.</p>
+          <span class="card-bottom">Ouvrir les instructions <span aria-hidden="true">→</span></span>
+        </a>
+      </nav>
+    </section>
+
+    <aside class="project-banner" aria-labelledby="projet">
+      <div>
+        <p class="eyebrow">Projet fil rouge</p>
+        <h2 id="projet">Suivre les livraisons d’un transporteur genevois</h2>
+        <p>L’équipe d’exploitation attend une fiche des indicateurs, un modèle dimensionnel et un lot préparé accompagné de ses rejets.</p>
+      </div>
+      <div class="project-actions"><a class="button" href="01_besoin_metier.html">Lire la situation de départ →</a></div>
+    </aside>
+
+    <section class="home-path-section" id="atelier" aria-labelledby="installation">
+      <div class="section-heading"><h2 id="installation">Démarrer le bac à sable</h2></div>
+      <div class="question-card prose">
+        <p>Depuis la racine du dépôt, avec Docker démarré, lancer les services puis récupérer l’URL et le jeton de JupyterLab.</p>
+        <pre tabindex="0"><code>docker compose -f sandbox/compose.yaml up --build --wait
+docker compose -f sandbox/compose.yaml exec atelier jupyter server list</code></pre>
+        <p>Ouvrir JupyterLab sur <code>127.0.0.1:8888</code> avec le jeton affiché. Le dossier <code>data/</code> contient le CSV de l’atelier.</p>
+        <p>Pour accéder à PostgreSQL avec <code>psql</code>, utiliser la commande suivante.</p>
+        <pre tabindex="0"><code>docker compose -f sandbox/compose.yaml exec postgres psql -U student -d formation</code></pre>
+        <div class="actions"><a class="button" href="https://github.com/Antoine07/data-warehouse">Ouvrir le dépôt GitHub ↗</a></div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer"><span>Data Warehouse · Satom IT &amp; Learning Solutions</span></footer>
+</body>
+</html>
